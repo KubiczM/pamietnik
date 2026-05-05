@@ -130,7 +130,7 @@ export default function App() {
       <div className="relative px-6 pb-10 text-center">
         <p className="text-white/80 mb-3 italic"
            style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: '1rem', textShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
-          Widzę, że odwiedziłeś Julię w jej pamiętniku 🌸
+          Widzę, że zaglądasz do pamiętnika Julii 🌸
         </p>
         <button
           onClick={() => setView('guest')}
