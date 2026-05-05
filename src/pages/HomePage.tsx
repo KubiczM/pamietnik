@@ -6,7 +6,7 @@ import { EntryForm } from '../components/EntryForm'
 import { GuestForm } from '../components/GuestForm'
 import { CoverPhoto } from '../components/CoverPhoto'
 import { MonthGroup } from '../components/MonthGroup'
-import { PlusIcon, DownloadIcon, SearchIcon, BookOpenIcon, PinIcon } from '../components/Icons'
+import { PlusIcon, DownloadIcon, SearchIcon, BookOpenIcon, PinIcon, PaletteIcon } from '../components/Icons'
 import { useProfilePhoto } from '../hooks/useProfilePhoto'
 import { groupEntriesByMonth, currentMonthKey } from '../utils/groupByMonth'
 import { ReminderBanner } from '../components/ReminderBanner'
@@ -80,6 +80,7 @@ export function HomePage({ onSignOut }: Props) {
   const [allEntries, setAllEntries] = useState<DiaryEntry[] | undefined>(undefined)
   const [tab, setTab] = useState<'entries' | 'gallery'>('entries')
   const [lightbox, setLightbox] = useState<LightboxPhoto | null>(null)
+  const [showTheme, setShowTheme] = useState(false)
   const { photo, position, pickPhoto, savePosition, removePhoto } = useProfilePhoto()
   const { theme, themeId, changeTheme } = useTheme()
 
@@ -149,33 +150,53 @@ export function HomePage({ onSignOut }: Props) {
           decoration={<HeaderDecoration />}
         />
 
-        {/* ── Zakładki Wpisy / Galeria ── */}
+        {/* ── Zakładki Wpisy / Galeria / Motyw ── */}
         <div className="bg-white border-b border-gray-100 px-4 pt-3 pb-0">
-          <div className="max-w-2xl mx-auto flex gap-1">
-            {(['entries', 'gallery'] as const).map(t => (
-              <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={`flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-t-xl transition-colors ${
-                  tab === t ? 'border-b-2' : 'text-gray-400 hover:text-gray-600'
-                }`}
-                style={tab === t ? {
-                  color: theme.gradFrom,
-                  borderColor: theme.gradFrom,
-                  backgroundColor: theme.bgFrom,
-                } : undefined}
-              >
-                {t === 'entries' ? '📖 Wpisy' : '📸 Galeria'}
-              </button>
-            ))}
+          <div className="max-w-2xl mx-auto flex items-end justify-between">
+            <div className="flex gap-1">
+              {(['entries', 'gallery'] as const).map(t => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-t-xl transition-colors ${
+                    tab === t ? 'border-b-2' : 'text-gray-400 hover:text-gray-600'
+                  }`}
+                  style={tab === t ? {
+                    color: theme.gradFrom,
+                    borderColor: theme.gradFrom,
+                    backgroundColor: theme.bgFrom,
+                  } : undefined}
+                >
+                  {t === 'entries' ? '📖 Wpisy' : '📸 Galeria'}
+                </button>
+              ))}
+            </div>
+            {/* Ikona pędzla */}
+            <button
+              onClick={() => setShowTheme(s => !s)}
+              className="mb-1 p-2 rounded-xl transition-colors"
+              style={showTheme ? {
+                color: theme.gradFrom,
+                background: theme.bgFrom,
+              } : { color: '#9ca3af' }}
+              title="Zmień motyw"
+            >
+              <PaletteIcon size={18} />
+            </button>
           </div>
+          {/* Rozwijany panel motywów */}
+          {showTheme && (
+            <div className="max-w-2xl mx-auto flex items-center gap-3 py-2.5 px-1">
+              <span className="text-xs text-gray-400 font-sans">Motyw:</span>
+              <ThemePicker current={themeId} onChange={(id) => { changeTheme(id); setShowTheme(false) }} />
+            </div>
+          )}
         </div>
 
         {/* ── Pasek akcji + wyszukiwarka (tylko w zakładce Wpisy) ── */}
         {tab === 'entries' && (
         <div className="bg-white border-b border-gray-100 shadow-sm px-4 pt-2.5 pb-2">
-          <div className="max-w-2xl mx-auto space-y-2">
-            {/* Wiersz 1: wyszukiwarka + przyciski */}
+          <div className="max-w-2xl mx-auto">
             <div className="flex items-center gap-2">
               <div className="relative flex-1 min-w-0">
                 <SearchIcon size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" />
@@ -201,11 +222,6 @@ export function HomePage({ onSignOut }: Props) {
                 <PlusIcon size={15} />
                 Nowy wpis
               </button>
-            </div>
-            {/* Wiersz 2: wybór motywu */}
-            <div className="flex items-center gap-2 pb-0.5">
-              <span className="text-xs text-gray-400 font-sans">Motyw:</span>
-              <ThemePicker current={themeId} onChange={changeTheme} />
             </div>
           </div>
         </div>
