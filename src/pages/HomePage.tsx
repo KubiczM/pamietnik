@@ -172,7 +172,7 @@ const count = allEntries?.length ?? 0
                 }}
                 title="Zmień motyw"
               >
-                <PaletteIcon size={20} />
+                🎨
               </button>
               {showTheme && (
                 <div
