@@ -4,7 +4,7 @@ import { compressImage } from '../utils/compressImage'
 import { CameraIcon, UserIcon, HeartIcon } from './Icons'
 
 interface Props {
-  onSave: (data: Omit<DiaryEntry, 'id' | 'createdAt' | 'updatedAt'>) => void
+  onSave: (data: Omit<DiaryEntry, 'id' | 'created_at' | 'updated_at'>) => void
   onCancel: () => void
 }
 
@@ -32,7 +32,7 @@ export function GuestForm({ onSave, onCancel }: Props) {
       content,
       date: today,
       photos,
-      guestName: guestName.trim(),
+      guest_name: guestName.trim(),
     })
   }
 

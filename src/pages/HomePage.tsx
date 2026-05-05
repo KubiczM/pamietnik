@@ -1,13 +1,14 @@
-import { useState } from 'react'
-import { useLiveQuery } from 'dexie-react-hooks'
-import { db, type DiaryEntry } from '../db/database'
-import { addEntry, updateEntry, deleteEntry, exportAllEntries } from '../db/entries'
+import { useState, useEffect, useCallback } from 'react'
+import type { DiaryEntry } from '../db/database'
+import { fetchEntries, addEntry, updateEntry, deleteEntry, exportAllEntries } from '../db/entries'
 import { EntryCard } from '../components/EntryCard'
 import { EntryForm } from '../components/EntryForm'
 import { GuestForm } from '../components/GuestForm'
 import { CoverPhoto } from '../components/CoverPhoto'
+import { MonthGroup } from '../components/MonthGroup'
 import { PlusIcon, DownloadIcon, SearchIcon, BookOpenIcon } from '../components/Icons'
 import { useProfilePhoto } from '../hooks/useProfilePhoto'
+import { groupEntriesByMonth, currentMonthKey } from '../utils/groupByMonth'
 
 // Dekoracyjna grafika SVG — abstrakcyjne kółka i linie w tle nagłówka
 function HeaderDecoration() {
@@ -58,15 +59,22 @@ type FormState =
   | { mode: 'edit'; entry: DiaryEntry }
   | { mode: 'guest' }
 
-export function HomePage() {
+interface Props {
+  onSignOut: () => void
+}
+
+export function HomePage({ onSignOut }: Props) {
   const [form, setForm] = useState<FormState>({ mode: 'hidden' })
   const [search, setSearch] = useState('')
+  const [allEntries, setAllEntries] = useState<DiaryEntry[] | undefined>(undefined)
   const { photo, position, pickPhoto, savePosition } = useProfilePhoto()
 
-  const allEntries = useLiveQuery(
-    () => db.entries.orderBy('date').reverse().toArray(),
-    []
-  )
+  const loadEntries = useCallback(async () => {
+    const data = await fetchEntries()
+    setAllEntries(data)
+  }, [])
+
+  useEffect(() => { loadEntries() }, [loadEntries])
 
   const entries = (allEntries ?? []).filter((e) => {
     if (!search.trim()) return true
@@ -74,22 +82,24 @@ export function HomePage() {
     return (
       e.title.toLowerCase().includes(q) ||
       e.content.toLowerCase().includes(q) ||
-      (e.guestName ?? '').toLowerCase().includes(q)
+      (e.guest_name ?? '').toLowerCase().includes(q)
     )
   })
 
-  async function handleSave(data: Omit<DiaryEntry, 'id' | 'createdAt' | 'updatedAt'>) {
+  async function handleSave(data: Omit<DiaryEntry, 'id' | 'created_at' | 'updated_at'>) {
     if (form.mode === 'edit' && form.entry.id != null) {
       await updateEntry(form.entry.id, data)
     } else {
       await addEntry(data)
     }
     setForm({ mode: 'hidden' })
+    await loadEntries()
   }
 
   async function handleDelete(id: number) {
     if (confirm('Na pewno usunąć ten wpis?')) {
       await deleteEntry(id)
+      await loadEntries()
     }
   }
 
@@ -174,9 +184,10 @@ export function HomePage() {
               {search ? 'Brak wyników wyszukiwania.' : 'Tu będą wspomnienia Julii.'}
             </p>
           </div>
-        ) : (
-          <div className="space-y-3">
-            {entries.map((entry) => (
+        ) : search.trim() ? (
+          /* Podczas wyszukiwania — płaska lista bez grupowania */
+          <div className="space-y-3 pt-2">
+            {entries.map(entry => (
               <EntryCard
                 key={entry.id}
                 entry={entry}
@@ -185,24 +196,31 @@ export function HomePage() {
               />
             ))}
           </div>
-        )}
-
-        {/* Baner dla gości — na dole, nienachalny */}
-        {form.mode === 'hidden' && (
-          <div className="mt-6 rounded-2xl border border-violet-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-5 flex items-center justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold text-gray-700">Jesteś gościem?</p>
-              <p className="text-xs text-gray-400 mt-0.5">Zostaw Julii swoją wiadomość w pamiętniku</p>
-            </div>
-            <button
-              onClick={() => setForm({ mode: 'guest' })}
-              className="flex-shrink-0 text-sm px-4 py-2 rounded-xl font-semibold text-white transition-opacity hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, #a78bfa 0%, #818cf8 100%)' }}
-            >
-              Napisz
-            </button>
+        ) : (
+          /* Normalna lista — grupowana po miesiącach */
+          <div className="pt-2">
+            {groupEntriesByMonth(entries).map(group => (
+              <MonthGroup
+                key={group.key}
+                label={group.label}
+                entries={group.entries}
+                defaultOpen={group.key === currentMonthKey()}
+                onEdit={(e) => setForm({ mode: 'edit', entry: e })}
+                onDelete={handleDelete}
+              />
+            ))}
           </div>
         )}
+
+        {/* Wyloguj — na samym dole */}
+        <div className="pt-4 pb-8 text-center">
+          <button
+            onClick={onSignOut}
+            className="text-xs px-4 py-2 rounded-xl border border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-gray-500 font-sans transition-colors"
+          >
+            Wyloguj się
+          </button>
+        </div>
       </main>
     </div>
   )

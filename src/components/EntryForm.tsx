@@ -5,7 +5,7 @@ import { CameraIcon, CalendarIcon } from './Icons'
 
 interface Props {
   initial?: DiaryEntry | null
-  onSave: (data: Omit<DiaryEntry, 'id' | 'createdAt' | 'updatedAt'>) => void
+  onSave: (data: Omit<DiaryEntry, 'id' | 'created_at' | 'updated_at'>) => void
   onCancel: () => void
 }
 

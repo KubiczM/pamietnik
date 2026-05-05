@@ -1,18 +1,39 @@
-import { db, type DiaryEntry } from './database'
+import { supabase } from './supabase'
+import type { DiaryEntry } from './database'
 
-export async function addEntry(data: Omit<DiaryEntry, 'id' | 'createdAt' | 'updatedAt'>) {
+export async function fetchEntries(): Promise<DiaryEntry[]> {
+  const { data, error } = await supabase
+    .from('entries')
+    .select('*')
+    .order('date', { ascending: false })
+  if (error) throw error
+  return (data ?? []).map(row => ({ ...row, photos: row.photos ?? [] }))
+}
+
+export async function addEntry(data: Omit<DiaryEntry, 'id' | 'created_at' | 'updated_at'>) {
   const now = Date.now()
-  return db.entries.add({ ...data, createdAt: now, updatedAt: now })
+  const { error } = await supabase
+    .from('entries')
+    .insert({ ...data, created_at: now, updated_at: now })
+  if (error) throw error
 }
 
 export async function updateEntry(id: number, data: Partial<DiaryEntry>) {
-  return db.entries.update(id, { ...data, updatedAt: Date.now() })
+  const { error } = await supabase
+    .from('entries')
+    .update({ ...data, updated_at: Date.now() })
+    .eq('id', id)
+  if (error) throw error
 }
 
 export async function deleteEntry(id: number) {
-  return db.entries.delete(id)
+  const { error } = await supabase
+    .from('entries')
+    .delete()
+    .eq('id', id)
+  if (error) throw error
 }
 
 export async function exportAllEntries(): Promise<DiaryEntry[]> {
-  return db.entries.orderBy('date').reverse().toArray()
+  return fetchEntries()
 }

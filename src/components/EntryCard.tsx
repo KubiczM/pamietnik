@@ -18,7 +18,7 @@ function formatDate(iso: string) {
 }
 
 export function EntryCard({ entry, onEdit, onDelete }: Props) {
-  const isGuest = Boolean(entry.guestName)
+  const isGuest = Boolean(entry.guest_name)
 
   return (
     <article
@@ -50,7 +50,7 @@ export function EntryCard({ entry, onEdit, onDelete }: Props) {
 
           {isGuest && (
             <p className="mt-0.5 text-xs text-violet-400 font-sans font-medium">
-              od: {entry.guestName}
+              od: {entry.guest_name}
             </p>
           )}
 
