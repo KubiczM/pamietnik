@@ -230,7 +230,7 @@ export function HomePage({ onSignOut }: Props) {
 
         {/* ── Pasek akcji + wyszukiwarka (tylko w zakładce Wpisy) ── */}
         {tab === 'entries' && (
-        <div className="bg-white border-b border-gray-100 shadow-sm px-4 pt-1.5 pb-1.5">
+        <div className="bg-white border-b border-gray-100 shadow-sm px-4 pt-3 pb-2.5">
           <div className="max-w-2xl mx-auto">
             <div className="flex items-center gap-2">
               <div className="relative flex-1 min-w-0">
@@ -253,7 +253,7 @@ export function HomePage({ onSignOut }: Props) {
             </div>
             {/* Filtry Julia / Wszyscy / Goście */}
             {allEntries && (
-              <div className="flex gap-1.5 pt-1 pb-0.5">
+              <div className="flex gap-1.5 pt-2.5 pb-0.5">
                 {(['all', 'julia', 'guests'] as const).map(f => (
                   <button
                     key={f}
