@@ -1,17 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap');
 
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  html {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
   body {
     @apply bg-gradient-to-br from-rose-50 via-pink-50 to-violet-50 text-gray-800 font-sans min-h-screen;
     overflow-x: hidden;
-    max-width: 100vw;
+    max-width: 100%;
+    width: 100%;
   }
   #root {
     overflow-x: hidden;
-    max-width: 100vw;
+    max-width: 100%;
+    width: 100%;
+  }
+  /* iOS Safari auto-zoom fix — inputs < 16px powodują zoom przy fokusie */
+  input, textarea, select {
+    font-size: max(16px, 1em) !important;
   }
 }
