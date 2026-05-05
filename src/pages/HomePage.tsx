@@ -207,18 +207,11 @@ export function HomePage({ onSignOut }: Props) {
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Szukaj wspomnień…"
+                  placeholder="Szukaj…"
                   className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:border-transparent transition-all placeholder:text-gray-400"
                 />
               </div>
-              <button
-                onClick={handleExport}
-                title="Eksportuj backup JSON"
-                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 text-gray-400 hover:bg-gray-100 transition-colors"
-              >
-                <DownloadIcon size={16} />
-              </button>
-              <button
+<button
                 onClick={() => setForm({ mode: 'new' })}
                 className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-sm whitespace-nowrap"
                 style={{ background: `linear-gradient(135deg, ${theme.gradFrom} 0%, ${theme.gradVia} 60%, ${theme.gradTo} 100%)` }}
