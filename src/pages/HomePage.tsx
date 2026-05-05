@@ -11,6 +11,8 @@ import { useProfilePhoto } from '../hooks/useProfilePhoto'
 import { groupEntriesByMonth, currentMonthKey } from '../utils/groupByMonth'
 import { ReminderBanner } from '../components/ReminderBanner'
 import { BirthdayBanner } from '../components/BirthdayBanner'
+import { ThemePicker } from '../components/ThemePicker'
+import { useTheme } from '../hooks/useTheme'
 import { GalleryPage } from './GalleryPage'
 import { PhotoLightbox } from '../components/PhotoLightbox'
 
@@ -79,6 +81,7 @@ export function HomePage({ onSignOut }: Props) {
   const [tab, setTab] = useState<'entries' | 'gallery'>('entries')
   const [lightbox, setLightbox] = useState<LightboxPhoto | null>(null)
   const { photo, position, pickPhoto, savePosition } = useProfilePhoto()
+  const { theme, themeId, changeTheme } = useTheme()
 
   const loadEntries = useCallback(async () => {
     const data = await fetchEntries()
@@ -148,26 +151,22 @@ export function HomePage({ onSignOut }: Props) {
         {/* ── Zakładki Wpisy / Galeria ── */}
         <div className="bg-white border-b border-gray-100 px-4 pt-3 pb-0">
           <div className="max-w-2xl mx-auto flex gap-1">
-            <button
-              onClick={() => setTab('entries')}
-              className={`flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-t-xl transition-colors ${
-                tab === 'entries'
-                  ? 'text-rose-500 border-b-2 border-rose-400 bg-rose-50/50'
-                  : 'text-gray-400 hover:text-gray-600'
-              }`}
-            >
-              📖 Wpisy
-            </button>
-            <button
-              onClick={() => setTab('gallery')}
-              className={`flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-t-xl transition-colors ${
-                tab === 'gallery'
-                  ? 'text-rose-500 border-b-2 border-rose-400 bg-rose-50/50'
-                  : 'text-gray-400 hover:text-gray-600'
-              }`}
-            >
-              📸 Galeria
-            </button>
+            {(['entries', 'gallery'] as const).map(t => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={`flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-t-xl transition-colors ${
+                  tab === t ? 'border-b-2' : 'text-gray-400 hover:text-gray-600'
+                }`}
+                style={tab === t ? {
+                  color: theme.gradFrom,
+                  borderColor: theme.gradFrom,
+                  backgroundColor: theme.bgFrom,
+                } : undefined}
+              >
+                {t === 'entries' ? '📖 Wpisy' : '📸 Galeria'}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -184,6 +183,7 @@ export function HomePage({ onSignOut }: Props) {
                 className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition-all placeholder:text-gray-400"
               />
             </div>
+            <ThemePicker current={themeId} onChange={changeTheme} />
             <button
               onClick={handleExport}
               title="Eksportuj backup JSON"
@@ -194,7 +194,7 @@ export function HomePage({ onSignOut }: Props) {
             <button
               onClick={() => setForm({ mode: 'new' })}
               className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-sm whitespace-nowrap"
-              style={{ background: 'linear-gradient(135deg, #f472b6 0%, #c084fc 60%, #818cf8 100%)' }}
+              style={{ background: `linear-gradient(135deg, ${theme.gradFrom} 0%, ${theme.gradVia} 60%, ${theme.gradTo} 100%)` }}
             >
               <PlusIcon size={15} />
               Nowy wpis

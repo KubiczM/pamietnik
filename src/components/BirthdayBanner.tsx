@@ -61,7 +61,7 @@ export function BirthdayBanner() {
 
   return (
     <div className="relative overflow-hidden rounded-2xl mb-4"
-         style={{ background: 'linear-gradient(135deg, #f472b6 0%, #c084fc 55%, #818cf8 100%)' }}>
+         style={{ background: 'linear-gradient(135deg, var(--grad-from) 0%, var(--grad-via) 55%, var(--grad-to) 100%)' }}>
 
       {/* Confetti tła */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden>

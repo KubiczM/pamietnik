@@ -25,7 +25,7 @@ export function MonthGroup({ label, entries, defaultOpen, onEdit, onDelete, onTo
           {/* Etykieta miesiąca */}
           <span
             className="text-xs font-bold font-sans whitespace-nowrap px-3 py-1 rounded-full text-white tracking-wide"
-            style={{ background: 'linear-gradient(135deg, #f472b6, #c084fc)' }}
+            style={{ background: 'linear-gradient(135deg, var(--grad-from), var(--grad-to))' }}
           >
             {label}
           </span>
