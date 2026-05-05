@@ -179,7 +179,7 @@ const count = allEntries?.length ?? 0
                   className="absolute right-0 top-full mt-2 z-50 flex items-center gap-2 px-3 py-2.5 rounded-2xl shadow-lg"
                   style={{ background: 'white', border: `1px solid ${theme.bgTo}` }}
                 >
-                  <ThemePicker current={themeId} onChange={(id) => { changeTheme(id); setShowTheme(false) }} />
+                  <ThemePicker current={themeId} onChange={changeTheme} />
                 </div>
               )}
             </div>
