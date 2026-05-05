@@ -60,9 +60,12 @@ export default function App() {
             Wiadomość wysłana!
           </p>
           <p className="text-white/70 text-sm font-sans">Julia na pewno się ucieszy.</p>
-          <button onClick={() => setView('start')}
-                  className="mt-4 text-white/60 text-xs underline font-sans">
-            Wróć
+          <button
+            onClick={() => setView('start')}
+            className="mt-4 inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl text-sm font-semibold text-white transition-colors font-sans"
+            style={{ background: 'rgba(255,255,255,0.25)', border: '1.5px solid rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)' }}
+          >
+            ← Wróć na start
           </button>
         </div>
       </div>
@@ -127,7 +130,7 @@ export default function App() {
       <div className="relative px-6 pb-10 text-center">
         <p className="text-white text-base font-bold font-sans mb-3"
            style={{ textShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
-          Jesteś tu z wizytą?
+          Widzę, że odwiedziłeś Julię w jej pamiętniku 🌸
         </p>
         <button
           onClick={() => setView('guest')}
