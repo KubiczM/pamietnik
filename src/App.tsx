@@ -99,12 +99,21 @@ export default function App() {
 
       {/* Tytuł */}
       <div className="relative flex-1 flex flex-col items-center justify-center px-6 pt-16 pb-8 text-center">
-        <h1 className="text-white font-bold drop-shadow-lg mb-1"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(4rem, 18vw, 7rem)', lineHeight: 1.05 }}>
+        <h1 className="text-white font-bold mb-1"
+            style={{
+              fontFamily: '"Playfair Display", Georgia, serif',
+              fontSize: 'clamp(5rem, 22vw, 9rem)',
+              lineHeight: 1.0,
+              textShadow: '0 4px 24px rgba(0,0,0,0.25)',
+            }}>
           Pamiętnik
         </h1>
-        <p className="text-white/80 font-semibold tracking-widest uppercase drop-shadow mb-1"
-           style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(1rem, 4.5vw, 1.3rem)' }}>
+        <p className="text-white font-semibold tracking-widest uppercase mb-1"
+           style={{
+             fontFamily: '"Playfair Display", Georgia, serif',
+             fontSize: 'clamp(1.05rem, 5vw, 1.4rem)',
+             textShadow: '0 2px 8px rgba(0,0,0,0.2)',
+           }}>
           Julii Śliwińskiej
         </p>
         <div className="w-16 h-0.5 bg-white/40 rounded-full mt-4 mb-10" />
@@ -117,12 +126,14 @@ export default function App() {
 
       {/* Sekcja gościa — przyklejona do dołu */}
       <div className="relative px-6 pb-10 text-center">
-        <p className="text-white/90 text-sm font-semibold font-sans mb-3 drop-shadow">
+        <p className="text-white text-base font-bold font-sans mb-3"
+           style={{ textShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
           Jesteś tu z wizytą?
         </p>
         <button
           onClick={() => setView('guest')}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-semibold border border-white/40 text-white bg-white/15 backdrop-blur-sm hover:bg-white/25 active:bg-white/30 transition-colors shadow-sm"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-semibold text-white transition-colors"
+          style={{ background: 'rgba(255,255,255,0.25)', border: '1.5px solid rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)' }}
         >
           💌 Zostaw wiadomość dla Julii
         </button>

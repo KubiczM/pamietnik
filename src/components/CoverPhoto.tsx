@@ -8,10 +8,11 @@ interface Props {
   count: number
   onPickPhoto: (file: File) => void
   onSavePosition: (pos: PhotoPosition) => void
+  onRemovePhoto: () => void
   decoration: React.ReactNode
 }
 
-export function CoverPhoto({ photo, position, count, onPickPhoto, onSavePosition, decoration }: Props) {
+export function CoverPhoto({ photo, position, count, onPickPhoto, onSavePosition, onRemovePhoto, decoration }: Props) {
   const [mode, setMode] = useState<'view' | 'reposition'>('view')
   const [tempPos, setTempPos] = useState(position)
   const [coverHeight, setCoverHeight] = useState<number | null>(null)
@@ -177,12 +178,21 @@ export function CoverPhoto({ photo, position, count, onPickPhoto, onSavePosition
       {mode === 'view' && (
         <div className="absolute top-3 right-3 flex gap-2">
           {photo && (
-            <button
-              onClick={enterReposition}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-sm text-white text-xs font-sans font-medium active:bg-black/50 transition-colors"
-            >
-              Ustaw kadr
-            </button>
+            <>
+              <button
+                onClick={enterReposition}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-sm text-white text-xs font-sans font-medium active:bg-black/50 transition-colors"
+              >
+                Ustaw kadr
+              </button>
+              <button
+                onClick={() => { if (window.confirm('Usunąć zdjęcie okładki?')) onRemovePhoto() }}
+                className="flex items-center justify-center w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm text-white text-sm active:bg-black/50 transition-colors"
+                title="Usuń zdjęcie"
+              >
+                🗑
+              </button>
+            </>
           )}
           <button
             onClick={() => fileInputRef.current?.click()}

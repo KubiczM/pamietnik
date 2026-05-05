@@ -26,5 +26,12 @@ export function useProfilePhoto() {
     setPosition(pos)
   }
 
-  return { photo, position, pickPhoto, savePosition }
+  function removePhoto() {
+    localStorage.removeItem(PHOTO_KEY)
+    localStorage.removeItem(POS_KEY)
+    setPhoto(null)
+    setPosition({ x: 50, y: 50 })
+  }
+
+  return { photo, position, pickPhoto, savePosition, removePhoto }
 }

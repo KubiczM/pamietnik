@@ -80,7 +80,7 @@ export function HomePage({ onSignOut }: Props) {
   const [allEntries, setAllEntries] = useState<DiaryEntry[] | undefined>(undefined)
   const [tab, setTab] = useState<'entries' | 'gallery'>('entries')
   const [lightbox, setLightbox] = useState<LightboxPhoto | null>(null)
-  const { photo, position, pickPhoto, savePosition } = useProfilePhoto()
+  const { photo, position, pickPhoto, savePosition, removePhoto } = useProfilePhoto()
   const { theme, themeId, changeTheme } = useTheme()
 
   const loadEntries = useCallback(async () => {
@@ -145,6 +145,7 @@ export function HomePage({ onSignOut }: Props) {
           count={count}
           onPickPhoto={pickPhoto}
           onSavePosition={savePosition}
+          onRemovePhoto={removePhoto}
           decoration={<HeaderDecoration />}
         />
 
