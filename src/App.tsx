@@ -128,16 +128,23 @@ export default function App() {
 
       {/* Sekcja gościa — przyklejona do dołu */}
       <div className="relative px-6 pb-10 text-center">
-        <p className="text-white text-base font-bold font-sans mb-3"
-           style={{ textShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
+        <p className="text-white/80 mb-3 italic"
+           style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: '1rem', textShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
           Widzę, że odwiedziłeś Julię w jej pamiętniku 🌸
         </p>
         <button
           onClick={() => setView('guest')}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-semibold text-white transition-colors"
-          style={{ background: 'rgba(255,255,255,0.25)', border: '1.5px solid rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)' }}
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl text-white/90 transition-colors"
+          style={{
+            fontFamily: '"Playfair Display", Georgia, serif',
+            fontSize: '0.9rem',
+            fontStyle: 'italic',
+            background: 'rgba(255,255,255,0.18)',
+            border: '1px solid rgba(255,255,255,0.35)',
+            backdropFilter: 'blur(8px)',
+          }}
         >
-          💌 Zostaw wiadomość dla Julii
+          💌 Zostaw wiadomość
         </button>
       </div>
     </div>
