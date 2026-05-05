@@ -28,6 +28,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     r.setProperty('--bg-from', theme.bgFrom)
     r.setProperty('--bg-via', theme.bgVia)
     r.setProperty('--bg-to', theme.bgTo)
+    // Semantic accent vars used across components
+    r.setProperty('--accent', theme.gradFrom)
+    r.setProperty('--accent2', theme.gradVia)
+    r.setProperty('--accent-bg', theme.bgFrom)
+    r.setProperty('--accent-border', theme.bgTo)
     document.body.style.background =
       `linear-gradient(135deg, ${theme.bgFrom}, ${theme.bgVia}, ${theme.bgTo})`
   }, [theme])

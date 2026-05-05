@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import type { DiaryEntry } from '../db/database'
 import { compressImage } from '../utils/compressImage'
 import { CameraIcon, CalendarIcon } from './Icons'
+import { useTheme } from '../contexts/ThemeContext'
 
 interface Props {
   initial?: DiaryEntry | null
@@ -12,6 +13,7 @@ interface Props {
 const MOODS = ['😊','🥰','🤩','😌','😴','😢','😡','🤒']
 
 export function EntryForm({ initial, onSave, onCancel }: Props) {
+  const { theme } = useTheme()
   const today = new Date().toISOString().split('T')[0]
   const [title, setTitle] = useState(initial?.title ?? '')
   const [content, setContent] = useState(initial?.content ?? '')
@@ -53,7 +55,11 @@ export function EntryForm({ initial, onSave, onCancel }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-2xl border border-pink-100 p-6 space-y-4 shadow-[0_4px_24px_rgba(244,114,182,0.1)]"
+      className="bg-white rounded-2xl p-6 space-y-4"
+      style={{
+        border: `1px solid ${theme.bgTo}`,
+        boxShadow: `0 4px 24px ${theme.gradFrom}18`,
+      }}
     >
       <div className="pb-3 border-b border-gray-50">
         <h2 className="text-base font-semibold text-gray-800">
@@ -104,11 +110,12 @@ export function EntryForm({ initial, onSave, onCancel }: Props) {
               key={m}
               type="button"
               onClick={() => setMood(mood === m ? '' : m)}
-              className={`text-2xl w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
-                mood === m
-                  ? 'bg-rose-100 ring-2 ring-rose-300 scale-110'
-                  : 'bg-gray-50 hover:bg-gray-100'
-              }`}
+              className="text-2xl w-11 h-11 rounded-xl flex items-center justify-center transition-all bg-gray-50 hover:bg-gray-100"
+              style={mood === m ? {
+                background: `${theme.gradFrom}20`,
+                outline: `2px solid ${theme.gradFrom}80`,
+                transform: 'scale(1.1)',
+              } : undefined}
             >
               {m}
             </button>
@@ -150,7 +157,7 @@ export function EntryForm({ initial, onSave, onCancel }: Props) {
         <button
           type="submit"
           className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-sm"
-          style={{ background: 'linear-gradient(135deg, #f9a8d4 0%, #c084fc 50%, #818cf8 100%)' }}
+          style={{ background: `linear-gradient(135deg, ${theme.gradFrom} 0%, ${theme.gradVia} 50%, ${theme.gradTo} 100%)` }}
         >
           Zapisz wpis
         </button>

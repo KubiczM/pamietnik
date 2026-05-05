@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTheme } from '../contexts/ThemeContext'
 
 const JULIA_EMAIL = 'julia@pamietnik.pl'
 
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export function LoginForm({ onLogin }: Props) {
+  const { theme } = useTheme()
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -43,7 +45,8 @@ export function LoginForm({ onLogin }: Props) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3.5 rounded-2xl text-sm font-semibold bg-white text-rose-500 hover:bg-pink-50 active:bg-pink-100 transition-colors disabled:opacity-60 shadow-lg"
+        className="w-full py-3.5 rounded-2xl text-sm font-semibold bg-white transition-colors disabled:opacity-60 shadow-lg"
+        style={{ color: theme.gradFrom }}
       >
         {loading ? 'Otwieram…' : 'Otwórz pamiętnik'}
       </button>

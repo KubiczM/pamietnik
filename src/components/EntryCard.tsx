@@ -1,5 +1,6 @@
 import type { DiaryEntry } from '../db/database'
 import { PenIcon, TrashIcon, CalendarIcon, UserIcon, PinIcon } from './Icons'
+import { useTheme } from '../contexts/ThemeContext'
 
 interface Props {
   entry: DiaryEntry
@@ -20,21 +21,25 @@ function formatDate(iso: string) {
 
 export function EntryCard({ entry, onEdit, onDelete, onTogglePin }: Props) {
   const isGuest = Boolean(entry.guest_name)
+  const { theme } = useTheme()
 
   return (
     <article
-      className={`bg-white rounded-2xl p-5 transition-all duration-200 hover:-translate-y-0.5 ${
-        isGuest
-          ? 'border-2 border-violet-100 shadow-[0_4px_20px_rgba(167,139,250,0.12)] hover:shadow-[0_8px_30px_rgba(167,139,250,0.2)]'
-          : 'border border-pink-100 shadow-[0_2px_16px_rgba(244,114,182,0.08)] hover:shadow-[0_6px_24px_rgba(244,114,182,0.16)]'
-      }`}
+      className="bg-white rounded-2xl p-5 transition-all duration-200 hover:-translate-y-0.5"
+      style={isGuest ? {
+        border: '2px solid #ede9fe',
+        boxShadow: '0 4px 20px rgba(167,139,250,0.12)',
+      } : {
+        border: `1px solid ${theme.bgTo}`,
+        boxShadow: `0 2px 16px ${theme.gradFrom}14`,
+      }}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           {/* Nagłówek karty: data + badge gościa */}
           <div className="flex items-center gap-2 flex-wrap">
             <time className="inline-flex items-center gap-1.5 text-xs text-gray-400 font-sans">
-              <CalendarIcon size={12} className={isGuest ? 'text-violet-300' : 'text-rose-300'} />
+              <span style={{ color: isGuest ? '#c4b5fd' : theme.gradFrom }}><CalendarIcon size={12} /></span>
               {formatDate(entry.date)}
             </time>
             {entry.mood && (
@@ -89,11 +94,11 @@ export function EntryCard({ entry, onEdit, onDelete, onTogglePin }: Props) {
         </button>
         <button
           onClick={() => onTogglePin(entry.id!, !!entry.is_pinned)}
-          className={`ml-auto inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl transition-colors font-sans ${
-            entry.is_pinned
-              ? 'bg-rose-50 text-rose-400 hover:bg-rose-100'
-              : 'text-gray-300 hover:text-rose-300 hover:bg-rose-50'
-          }`}
+          className="ml-auto inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl transition-colors font-sans"
+          style={entry.is_pinned ? {
+            color: theme.gradFrom,
+            background: `${theme.gradFrom}15`,
+          } : undefined}
         >
           <PinIcon size={12} />
           {entry.is_pinned ? 'Odpnij' : 'Przytnij'}
