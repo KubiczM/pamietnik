@@ -9,12 +9,15 @@ interface Props {
   onCancel: () => void
 }
 
+const MOODS = ['😊','🥰','🤩','😌','😴','😢','😡','🤒']
+
 export function EntryForm({ initial, onSave, onCancel }: Props) {
   const today = new Date().toISOString().split('T')[0]
   const [title, setTitle] = useState(initial?.title ?? '')
   const [content, setContent] = useState(initial?.content ?? '')
   const [date, setDate] = useState(initial?.date ?? today)
   const [photos, setPhotos] = useState<string[]>(initial?.photos ?? [])
+  const [mood, setMood] = useState<string>(initial?.mood ?? '')
   const [compressing, setCompressing] = useState(false)
 
   useEffect(() => {
@@ -23,6 +26,7 @@ export function EntryForm({ initial, onSave, onCancel }: Props) {
       setContent(initial.content)
       setDate(initial.date)
       setPhotos(initial.photos)
+      setMood(initial.mood ?? '')
     }
   }, [initial])
 
@@ -38,7 +42,7 @@ export function EntryForm({ initial, onSave, onCancel }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!title.trim()) return
-    onSave({ title: title.trim(), content, date, photos })
+    onSave({ title: title.trim(), content, date, photos, mood: mood || undefined })
   }
 
   const inputClass =
@@ -89,6 +93,27 @@ export function EntryForm({ initial, onSave, onCancel }: Props) {
           rows={6}
           className={`${inputClass} resize-none leading-relaxed`}
         />
+      </div>
+
+      {/* Nastrój dnia */}
+      <div className="space-y-2">
+        <label className={labelClass}>Nastrój dnia</label>
+        <div className="flex gap-2 flex-wrap">
+          {MOODS.map(m => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMood(mood === m ? '' : m)}
+              className={`text-2xl w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
+                mood === m
+                  ? 'bg-rose-100 ring-2 ring-rose-300 scale-110'
+                  : 'bg-gray-50 hover:bg-gray-100'
+              }`}
+            >
+              {m}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="space-y-1.5">

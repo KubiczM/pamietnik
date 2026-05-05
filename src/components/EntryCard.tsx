@@ -36,6 +36,9 @@ export function EntryCard({ entry, onEdit, onDelete }: Props) {
               <CalendarIcon size={12} className={isGuest ? 'text-violet-300' : 'text-rose-300'} />
               {formatDate(entry.date)}
             </time>
+            {entry.mood && (
+              <span className="text-lg leading-none" title="Nastrój dnia">{entry.mood}</span>
+            )}
             {isGuest && (
               <span className="inline-flex items-center gap-1 text-xs bg-violet-50 text-violet-500 px-2 py-0.5 rounded-full font-medium font-sans border border-violet-100">
                 <UserIcon size={10} />
