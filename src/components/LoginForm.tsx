@@ -45,10 +45,16 @@ export function LoginForm({ onLogin }: Props) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3.5 rounded-2xl text-sm font-semibold bg-white transition-colors disabled:opacity-60 shadow-lg"
-        style={{ color: theme.gradFrom }}
+        className="w-full py-3.5 rounded-2xl text-sm font-semibold bg-white disabled:opacity-60 shadow-lg"
       >
-        {loading ? 'Otwieram…' : 'Otwórz pamiętnik'}
+        <span style={{
+          background: `linear-gradient(135deg, ${theme.gradFrom}, ${theme.gradVia}, ${theme.gradTo})`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+        }}>
+          {loading ? 'Otwieram…' : 'Otwórz pamiętnik'}
+        </span>
       </button>
     </form>
   )

@@ -99,7 +99,7 @@ export default function App() {
 
       {/* Tytuł */}
       <div className="relative flex-1 flex flex-col items-center justify-center px-6 pt-16 pb-8 text-center">
-        <p className="text-white/60 text-[11px] font-sans tracking-[0.2em] uppercase mb-3">
+        <p className="text-white text-sm font-semibold font-sans tracking-[0.25em] uppercase mb-3 drop-shadow">
           Pamiętnik
         </p>
         <h1 className="text-white text-4xl font-bold mb-2 drop-shadow-md"
