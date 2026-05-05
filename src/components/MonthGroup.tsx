@@ -19,28 +19,22 @@ export function MonthGroup({ label, entries, defaultOpen, onEdit, onDelete, onTo
       {/* Nagłówek miesiąca */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between gap-3 px-1 py-1 rounded-2xl transition-all"
-        style={{
-          background: 'linear-gradient(135deg, var(--grad-from)12, var(--grad-to)09)',
-          border: '1px solid var(--grad-from)22',
-        }}
+        className="w-full flex items-center justify-between gap-3 py-2 group"
       >
-        {/* Pigułka z miesiącem */}
-        <span
-          className="text-xs font-bold font-sans whitespace-nowrap px-4 py-2 rounded-xl text-white tracking-wide flex items-center gap-2"
-          style={{ background: 'linear-gradient(135deg, var(--grad-from), var(--grad-to))' }}
-        >
-          {label}
-          <span className="opacity-70 font-normal">
+        <div className="flex items-center gap-3 min-w-0">
+          <span
+            className="text-xs font-bold font-sans whitespace-nowrap px-3 py-1 rounded-full text-white tracking-wide"
+            style={{ background: 'linear-gradient(135deg, var(--grad-from), var(--grad-to))' }}
+          >
+            {label}
+          </span>
+          <span className="text-xs text-gray-400 font-sans">
             {entries.length} {entries.length === 1 ? 'wpis' : entries.length < 5 ? 'wpisy' : 'wpisów'}
           </span>
-        </span>
+        </div>
 
-        {/* Zwiń / rozwiń */}
-        <span
-          className="text-xs font-semibold font-sans whitespace-nowrap flex items-center gap-1 pr-3"
-          style={{ color: 'var(--grad-from)' }}
-        >
+        <span className="text-xs font-semibold font-sans whitespace-nowrap flex items-center gap-1"
+              style={{ color: 'var(--grad-from)' }}>
           {open ? 'zwiń' : 'rozwiń'}
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" strokeWidth="3" strokeLinecap="round"
@@ -48,7 +42,6 @@ export function MonthGroup({ label, entries, defaultOpen, onEdit, onDelete, onTo
             <polyline points="6 9 12 15 18 9" />
           </svg>
         </span>
-
       </button>
 
       {/* Wpisy */}

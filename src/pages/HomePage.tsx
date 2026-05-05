@@ -252,7 +252,7 @@ export function HomePage({ onSignOut }: Props) {
               </button>
             </div>
             {/* Filtry Julia / Wszyscy / Goście */}
-            {allEntries && allEntries.some(e => e.guest_name) && (
+            {allEntries && (
               <div className="flex gap-1.5 pt-1 pb-0.5">
                 {(['all', 'julia', 'guests'] as const).map(f => (
                   <button

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import type { DiaryEntry } from '../db/database'
 import { compressImage } from '../utils/compressImage'
 import { CameraIcon, UserIcon, HeartIcon } from './Icons'
@@ -14,6 +14,7 @@ export function GuestForm({ onSave, onCancel }: Props) {
   const [content, setContent] = useState('')
   const [photos, setPhotos] = useState<string[]>([])
   const [compressing, setCompressing] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   async function handlePhotos(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? [])
@@ -81,12 +82,15 @@ export function GuestForm({ onSave, onCancel }: Props) {
         <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">
           <CameraIcon size={12} className="text-violet-400" /> Zdjęcie <span className="normal-case text-gray-400 font-normal">(opcjonalne)</span>
         </label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handlePhotos}
-          className="text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:bg-violet-50 file:text-violet-600 hover:file:bg-violet-100 file:font-medium"
-        />
+        <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotos} className="hidden" />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium font-sans border border-violet-200 bg-violet-50 text-violet-600 transition-colors hover:bg-violet-100"
+        >
+          <CameraIcon size={12} />
+          Dodaj zdjęcie
+        </button>
         {compressing && <p className="text-xs text-violet-400 animate-pulse">Kompresuję zdjęcie…</p>}
         {photos.length > 0 && (
           <div className="flex gap-2 flex-wrap">

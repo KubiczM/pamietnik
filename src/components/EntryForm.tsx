@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { DiaryEntry } from '../db/database'
 import { compressImage } from '../utils/compressImage'
 import { CameraIcon, CalendarIcon } from './Icons'
@@ -21,6 +21,7 @@ export function EntryForm({ initial, onSave, onCancel }: Props) {
   const [photos, setPhotos] = useState<string[]>(initial?.photos ?? [])
   const [mood, setMood] = useState<string>(initial?.mood ?? '')
   const [compressing, setCompressing] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (initial) {
@@ -127,13 +128,16 @@ export function EntryForm({ initial, onSave, onCancel }: Props) {
         <label className={`${labelClass} flex items-center gap-1.5`}>
           <CameraIcon size={12} className="text-rose-300" /> Zdjęcia
         </label>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handlePhotos}
-          className="text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:bg-rose-50 file:text-rose-500 hover:file:bg-rose-100 file:font-medium"
-        />
+        <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handlePhotos} className="hidden" />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium font-sans transition-colors"
+          style={{ background: theme.bgFrom, color: theme.gradFrom, border: `1px solid ${theme.gradFrom}30` }}
+        >
+          <CameraIcon size={12} />
+          Dodaj zdjęcia
+        </button>
         {compressing && <p className="text-xs text-rose-400 animate-pulse">Kompresuję zdjęcia…</p>}
         {photos.length > 0 && (
           <div className="flex gap-2 flex-wrap">

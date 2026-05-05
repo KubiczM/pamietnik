@@ -97,13 +97,15 @@ export function EntryCard({ entry, onEdit, onDelete, onTogglePin }: Props) {
       </div>
 
       <div className="mt-4 pt-3 border-t border-gray-50 flex gap-1 items-center">
-        <button
-          onClick={() => onEdit(entry)}
-          className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors font-sans font-medium"
-        >
-          <PenIcon size={12} />
-          Edytuj
-        </button>
+        {!isGuest && (
+          <button
+            onClick={() => onEdit(entry)}
+            className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors font-sans font-medium"
+          >
+            <PenIcon size={12} />
+            Edytuj
+          </button>
+        )}
         <button
           onClick={() => onDelete(entry.id!)}
           className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-50 transition-colors font-sans"
