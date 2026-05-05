@@ -34,10 +34,11 @@ export function MonthGroup({ label, entries, defaultOpen, onEdit, onDelete, onTo
           </span>
         </div>
 
-        <span className="text-xs text-rose-300 font-sans whitespace-nowrap flex items-center gap-1">
+        <span className="text-xs font-semibold font-sans whitespace-nowrap flex items-center gap-1"
+              style={{ color: 'var(--grad-from)' }}>
           {open ? 'zwiń' : 'rozwiń'}
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" strokeWidth="3" strokeLinecap="round"
                className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>
             <polyline points="6 9 12 15 18 9" />
           </svg>

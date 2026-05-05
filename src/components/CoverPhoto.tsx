@@ -115,6 +115,7 @@ export function CoverPhoto({ photo, position, onPickPhoto, onSavePosition, onRem
           ? (coverHeight ? `${coverHeight}px` : '52vw')
           : '160px',
         minHeight: '180px',
+        touchAction: mode === 'reposition' ? 'none' : 'auto',
       }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import type { DiaryEntry } from '../db/database'
 import { fetchEntries, addEntry, updateEntry, deleteEntry, togglePin } from '../db/entries'
+import { supabase } from '../db/supabase'
 import { EntryCard } from '../components/EntryCard'
 import { EntryForm } from '../components/EntryForm'
 import { GuestForm } from '../components/GuestForm'
@@ -15,6 +16,8 @@ import { ThemePicker } from '../components/ThemePicker'
 import { useTheme } from '../contexts/ThemeContext'
 import { GalleryPage } from './GalleryPage'
 import { PhotoLightbox } from '../components/PhotoLightbox'
+import { GuestNotification } from '../components/GuestNotification'
+import type { GuestNotificationData } from '../components/GuestNotification'
 
 // Dekoracyjna grafika SVG — abstrakcyjne kółka i linie w tle nagłówka
 function HeaderDecoration() {
@@ -79,8 +82,11 @@ export function HomePage({ onSignOut }: Props) {
   const [search, setSearch] = useState('')
   const [allEntries, setAllEntries] = useState<DiaryEntry[] | undefined>(undefined)
   const [tab, setTab] = useState<'entries' | 'gallery'>('entries')
+  const [filter, setFilter] = useState<'all' | 'julia' | 'guests'>('all')
   const [lightbox, setLightbox] = useState<LightboxPhoto | null>(null)
   const [showTheme, setShowTheme] = useState(false)
+  const [notification, setNotification] = useState<GuestNotificationData | null>(null)
+  const notifIdRef = useRef(0)
   const { photo, position, pickPhoto, savePosition, removePhoto } = useProfilePhoto()
   const { theme, themeId, changeTheme } = useTheme()
 
@@ -91,7 +97,38 @@ export function HomePage({ onSignOut }: Props) {
 
   useEffect(() => { loadEntries() }, [loadEntries])
 
+  /* ── Supabase Realtime — powiadomienia o nowych wpisach gości ── */
+  useEffect(() => {
+    const channel = supabase
+      .channel('entries-inserts')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'entries' },
+        (payload) => {
+          const row = payload.new as DiaryEntry
+          if (row.guest_name) {
+            // Nowy wpis gościa — pokaż powiadomienie i odśwież listę
+            notifIdRef.current += 1
+            setNotification({
+              id: notifIdRef.current,
+              guestName: row.guest_name,
+              title: row.title,
+            })
+            loadEntries()
+          } else {
+            // Nowy wpis Julii (np. z innego urządzenia) — cicho odśwież
+            loadEntries()
+          }
+        }
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  }, [loadEntries])
+
   const entries = (allEntries ?? []).filter((e) => {
+    if (filter === 'julia' && e.guest_name) return false
+    if (filter === 'guests' && !e.guest_name) return false
     if (!search.trim()) return true
     const q = search.toLowerCase()
     return (
@@ -126,6 +163,11 @@ export function HomePage({ onSignOut }: Props) {
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
+      {/* Powiadomienie o nowym wpisie gościa */}
+      <GuestNotification
+        notification={notification}
+        onDismiss={() => setNotification(null)}
+      />
       {/* ═══ NAGŁÓWEK ═══ */}
       <header className="z-10 relative">
         <CoverPhoto
@@ -209,6 +251,28 @@ export function HomePage({ onSignOut }: Props) {
                 Nowy wpis
               </button>
             </div>
+            {/* Filtry Julia / Wszyscy / Goście */}
+            {allEntries && allEntries.some(e => e.guest_name) && (
+              <div className="flex gap-1.5 pt-1 pb-0.5">
+                {(['all', 'julia', 'guests'] as const).map(f => (
+                  <button
+                    key={f}
+                    onClick={() => setFilter(f)}
+                    className="text-xs px-3 py-1 rounded-full font-sans font-medium transition-all"
+                    style={filter === f ? {
+                      background: `linear-gradient(135deg, ${theme.gradFrom}, ${theme.gradTo})`,
+                      color: 'white',
+                    } : {
+                      background: theme.bgFrom,
+                      color: theme.gradFrom,
+                      border: `1px solid ${theme.gradFrom}40`,
+                    }}
+                  >
+                    {f === 'all' ? 'Wszyscy' : f === 'julia' ? '👧 Julia' : '👤 Goście'}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         )}

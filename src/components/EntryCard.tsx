@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import type { DiaryEntry } from '../db/database'
 import { PenIcon, TrashIcon, CalendarIcon, UserIcon, PinIcon } from './Icons'
 import { useTheme } from '../contexts/ThemeContext'
+import { PhotoLightbox } from './PhotoLightbox'
 
 interface Props {
   entry: DiaryEntry
@@ -22,6 +24,7 @@ function formatDate(iso: string) {
 export function EntryCard({ entry, onEdit, onDelete, onTogglePin }: Props) {
   const isGuest = Boolean(entry.guest_name)
   const { theme } = useTheme()
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
 
   return (
     <article
@@ -69,11 +72,16 @@ export function EntryCard({ entry, onEdit, onDelete, onTogglePin }: Props) {
         </div>
 
         {entry.photos.length > 0 && (
-          <img
-            src={entry.photos[0]}
-            alt=""
-            className="w-20 h-20 rounded-2xl object-cover flex-shrink-0 border-2 border-pink-50"
-          />
+          <button onClick={() => setLightboxSrc(entry.photos[0])} className="flex-shrink-0">
+            <img
+              src={entry.photos[0]}
+              alt=""
+              className="w-20 h-20 rounded-2xl object-cover border-2 border-pink-50 active:opacity-80 transition-opacity"
+            />
+          </button>
+        )}
+        {lightboxSrc && (
+          <PhotoLightbox src={lightboxSrc} entry={entry} onClose={() => setLightboxSrc(null)} />
         )}
       </div>
 
