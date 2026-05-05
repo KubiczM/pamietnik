@@ -101,7 +101,7 @@ export function EntryCard({ entry, onEdit, onDelete, onTogglePin }: Props) {
           } : undefined}
         >
           <PinIcon size={12} />
-          {entry.is_pinned ? 'Odpnij' : 'Przytnij'}
+          {entry.is_pinned ? 'Odepnij' : 'Przypnij'}
         </button>
       </div>
     </article>
