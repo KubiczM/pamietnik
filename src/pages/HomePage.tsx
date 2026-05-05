@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { DiaryEntry } from '../db/database'
-import { fetchEntries, addEntry, updateEntry, deleteEntry, exportAllEntries, togglePin } from '../db/entries'
+import { fetchEntries, addEntry, updateEntry, deleteEntry, togglePin } from '../db/entries'
 import { EntryCard } from '../components/EntryCard'
 import { EntryForm } from '../components/EntryForm'
 import { GuestForm } from '../components/GuestForm'
 import { CoverPhoto } from '../components/CoverPhoto'
 import { MonthGroup } from '../components/MonthGroup'
-import { PlusIcon, DownloadIcon, SearchIcon, BookOpenIcon, PinIcon, PaletteIcon } from '../components/Icons'
+import { PlusIcon, SearchIcon, BookOpenIcon, PinIcon, PaletteIcon } from '../components/Icons'
 import { useProfilePhoto } from '../hooks/useProfilePhoto'
 import { groupEntriesByMonth, currentMonthKey } from '../utils/groupByMonth'
 import { ReminderBanner } from '../components/ReminderBanner'
@@ -123,18 +123,7 @@ export function HomePage({ onSignOut }: Props) {
     await loadEntries()
   }
 
-  async function handleExport() {
-    const data = await exportAllEntries()
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `pamietnik-backup-${new Date().toISOString().split('T')[0]}.json`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
-
-  const count = allEntries?.length ?? 0
+const count = allEntries?.length ?? 0
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
