@@ -21,10 +21,17 @@ function formatDate(iso: string) {
   return `${parseInt(day)} ${MONTHS[parseInt(month) - 1]} ${year}`
 }
 
+const CONTENT_LIMIT = 300
+
 export function EntryCard({ entry, onEdit, onDelete, onTogglePin }: Props) {
   const isGuest = Boolean(entry.guest_name)
   const { theme } = useTheme()
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
+  const [expanded, setExpanded] = useState(false)
+  const isLong = entry.content.length > CONTENT_LIMIT
+  const displayContent = isLong && !expanded
+    ? entry.content.slice(0, CONTENT_LIMIT).trimEnd() + '…'
+    : entry.content
 
   return (
     <article
@@ -61,9 +68,18 @@ export function EntryCard({ entry, onEdit, onDelete, onTogglePin }: Props) {
           </h2>
 
 
-          <p className="mt-2 text-sm text-gray-600 line-clamp-3 leading-relaxed">
-            {entry.content}
+          <p className="mt-2 text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
+            {displayContent}
           </p>
+          {isLong && (
+            <button
+              onClick={() => setExpanded(e => !e)}
+              className="mt-1 text-xs font-semibold font-sans"
+              style={{ color: isGuest ? '#8b5cf6' : theme.gradFrom }}
+            >
+              {expanded ? '▲ zwiń' : '▼ czytaj dalej'}
+            </button>
+          )}
         </div>
 
         {entry.photos.length > 0 && (
