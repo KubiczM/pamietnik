@@ -9,6 +9,7 @@ import { MonthGroup } from '../components/MonthGroup'
 import { PlusIcon, DownloadIcon, SearchIcon, BookOpenIcon } from '../components/Icons'
 import { useProfilePhoto } from '../hooks/useProfilePhoto'
 import { groupEntriesByMonth, currentMonthKey } from '../utils/groupByMonth'
+import { ReminderBanner } from '../components/ReminderBanner'
 
 // Dekoracyjna grafika SVG — abstrakcyjne kółka i linie w tle nagłówka
 function HeaderDecoration() {
@@ -161,6 +162,11 @@ export function HomePage({ onSignOut }: Props) {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-5 space-y-4">
+        {/* Baner przypomnienia */}
+        <ReminderBanner
+          lastEntryDate={allEntries && allEntries.length > 0 ? allEntries[0].date : null}
+        />
+
         {/* Aktywny formularz */}
         {form.mode === 'new' && (
           <EntryForm initial={null} onSave={handleSave} onCancel={() => setForm({ mode: 'hidden' })} />
