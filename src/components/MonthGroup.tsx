@@ -8,9 +8,10 @@ interface Props {
   defaultOpen: boolean
   onEdit: (entry: DiaryEntry) => void
   onDelete: (id: number) => void
+  onTogglePin: (id: number, current: boolean) => void
 }
 
-export function MonthGroup({ label, entries, defaultOpen, onEdit, onDelete }: Props) {
+export function MonthGroup({ label, entries, defaultOpen, onEdit, onDelete, onTogglePin }: Props) {
   const [open, setOpen] = useState(defaultOpen)
 
   return (
@@ -52,6 +53,7 @@ export function MonthGroup({ label, entries, defaultOpen, onEdit, onDelete }: Pr
               entry={entry}
               onEdit={onEdit}
               onDelete={onDelete}
+              onTogglePin={onTogglePin}
             />
           ))}
         </div>

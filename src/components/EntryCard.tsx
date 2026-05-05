@@ -1,10 +1,11 @@
 import type { DiaryEntry } from '../db/database'
-import { PenIcon, TrashIcon, CalendarIcon, UserIcon } from './Icons'
+import { PenIcon, TrashIcon, CalendarIcon, UserIcon, PinIcon } from './Icons'
 
 interface Props {
   entry: DiaryEntry
   onEdit: (entry: DiaryEntry) => void
   onDelete: (id: number) => void
+  onTogglePin: (id: number, current: boolean) => void
 }
 
 const MONTHS = [
@@ -17,7 +18,7 @@ function formatDate(iso: string) {
   return `${parseInt(day)} ${MONTHS[parseInt(month) - 1]} ${year}`
 }
 
-export function EntryCard({ entry, onEdit, onDelete }: Props) {
+export function EntryCard({ entry, onEdit, onDelete, onTogglePin }: Props) {
   const isGuest = Boolean(entry.guest_name)
 
   return (
@@ -71,7 +72,7 @@ export function EntryCard({ entry, onEdit, onDelete }: Props) {
         )}
       </div>
 
-      <div className="mt-4 pt-3 border-t border-gray-50 flex gap-1">
+      <div className="mt-4 pt-3 border-t border-gray-50 flex gap-1 items-center">
         <button
           onClick={() => onEdit(entry)}
           className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors font-sans font-medium"
@@ -85,6 +86,17 @@ export function EntryCard({ entry, onEdit, onDelete }: Props) {
         >
           <TrashIcon size={12} />
           Usuń
+        </button>
+        <button
+          onClick={() => onTogglePin(entry.id!, !!entry.is_pinned)}
+          className={`ml-auto inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl transition-colors font-sans ${
+            entry.is_pinned
+              ? 'bg-rose-50 text-rose-400 hover:bg-rose-100'
+              : 'text-gray-300 hover:text-rose-300 hover:bg-rose-50'
+          }`}
+        >
+          <PinIcon size={12} />
+          {entry.is_pinned ? 'Odpnij' : 'Przytnij'}
         </button>
       </div>
     </article>

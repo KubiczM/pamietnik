@@ -34,6 +34,14 @@ export async function deleteEntry(id: number) {
   if (error) throw error
 }
 
+export async function togglePin(id: number, current: boolean) {
+  const { error } = await supabase
+    .from('entries')
+    .update({ is_pinned: !current, updated_at: Date.now() })
+    .eq('id', id)
+  if (error) throw error
+}
+
 export async function exportAllEntries(): Promise<DiaryEntry[]> {
   return fetchEntries()
 }

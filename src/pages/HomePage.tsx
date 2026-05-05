@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { DiaryEntry } from '../db/database'
-import { fetchEntries, addEntry, updateEntry, deleteEntry, exportAllEntries } from '../db/entries'
+import { fetchEntries, addEntry, updateEntry, deleteEntry, exportAllEntries, togglePin } from '../db/entries'
 import { EntryCard } from '../components/EntryCard'
 import { EntryForm } from '../components/EntryForm'
 import { GuestForm } from '../components/GuestForm'
 import { CoverPhoto } from '../components/CoverPhoto'
 import { MonthGroup } from '../components/MonthGroup'
-import { PlusIcon, DownloadIcon, SearchIcon, BookOpenIcon } from '../components/Icons'
+import { PlusIcon, DownloadIcon, SearchIcon, BookOpenIcon, PinIcon } from '../components/Icons'
 import { useProfilePhoto } from '../hooks/useProfilePhoto'
 import { groupEntriesByMonth, currentMonthKey } from '../utils/groupByMonth'
 import { ReminderBanner } from '../components/ReminderBanner'
@@ -104,6 +104,11 @@ export function HomePage({ onSignOut }: Props) {
     }
   }
 
+  async function handleTogglePin(id: number, current: boolean) {
+    await togglePin(id, current)
+    await loadEntries()
+  }
+
   async function handleExport() {
     const data = await exportAllEntries()
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
@@ -199,13 +204,36 @@ export function HomePage({ onSignOut }: Props) {
                 entry={entry}
                 onEdit={(e) => setForm({ mode: 'edit', entry: e })}
                 onDelete={handleDelete}
+                onTogglePin={handleTogglePin}
               />
             ))}
           </div>
         ) : (
-          /* Normalna lista — grupowana po miesiącach */
           <div className="pt-2">
-            {groupEntriesByMonth(entries).map(group => (
+            {/* Przypięte wpisy */}
+            {entries.filter(e => e.is_pinned).length > 0 && (
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <PinIcon size={13} className="text-rose-400" />
+                  <span className="text-xs font-semibold text-rose-400 uppercase tracking-wider">Przypięte</span>
+                </div>
+                <div className="space-y-3">
+                  {entries.filter(e => e.is_pinned).map(entry => (
+                    <EntryCard
+                      key={entry.id}
+                      entry={entry}
+                      onEdit={(e) => setForm({ mode: 'edit', entry: e })}
+                      onDelete={handleDelete}
+                      onTogglePin={handleTogglePin}
+                    />
+                  ))}
+                </div>
+                <div className="h-px bg-gray-100 mt-6 mb-2" />
+              </div>
+            )}
+
+            {/* Normalna lista — grupowana po miesiącach */}
+            {groupEntriesByMonth(entries.filter(e => !e.is_pinned)).map(group => (
               <MonthGroup
                 key={group.key}
                 label={group.label}
@@ -213,6 +241,7 @@ export function HomePage({ onSignOut }: Props) {
                 defaultOpen={group.key === currentMonthKey()}
                 onEdit={(e) => setForm({ mode: 'edit', entry: e })}
                 onDelete={handleDelete}
+                onTogglePin={handleTogglePin}
               />
             ))}
           </div>
