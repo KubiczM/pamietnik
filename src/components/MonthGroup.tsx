@@ -22,13 +22,14 @@ export function MonthGroup({ label, entries, defaultOpen, onEdit, onDelete, onTo
         className="w-full flex items-center justify-between gap-3 py-2 group"
       >
         <div className="flex items-center gap-3 min-w-0">
-          {/* Linia dekoracyjna */}
-          <div className="h-px flex-1 max-w-[24px] rounded-full"
-               style={{ background: 'linear-gradient(90deg, #f9a8d4, #c084fc)' }} />
-          <span className="text-sm font-semibold text-gray-500 font-sans whitespace-nowrap">
+          {/* Etykieta miesiąca */}
+          <span
+            className="text-xs font-bold font-sans whitespace-nowrap px-3 py-1 rounded-full text-white tracking-wide"
+            style={{ background: 'linear-gradient(135deg, #f472b6, #c084fc)' }}
+          >
             {label}
           </span>
-          <span className="text-xs text-gray-300 font-sans">
+          <span className="text-xs text-gray-400 font-sans">
             {entries.length} {entries.length === 1 ? 'wpis' : entries.length < 5 ? 'wpisy' : 'wpisów'}
           </span>
         </div>
