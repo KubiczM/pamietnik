@@ -171,27 +171,30 @@ export function HomePage({ onSignOut }: Props) {
                 </button>
               ))}
             </div>
-            {/* Ikona pędzla */}
-            <button
-              onClick={() => setShowTheme(s => !s)}
-              className="mb-1 p-2 rounded-xl transition-all"
-              style={{
-                color: theme.gradFrom,
-                background: showTheme ? theme.bgFrom : `${theme.gradFrom}18`,
-                border: `1.5px solid ${theme.gradFrom}40`,
-              }}
-              title="Zmień motyw"
-            >
-              <PaletteIcon size={20} />
-            </button>
-          </div>
-          {/* Rozwijany panel motywów */}
-          {showTheme && (
-            <div className="max-w-2xl mx-auto flex items-center gap-3 py-2.5 px-1">
-              <span className="text-xs text-gray-400 font-sans">Motyw:</span>
-              <ThemePicker current={themeId} onChange={(id) => { changeTheme(id); setShowTheme(false) }} />
+            {/* Ikona pędzla z wysuwanym menu */}
+            <div className="relative mb-1">
+              <button
+                onClick={() => setShowTheme(s => !s)}
+                className="p-2 rounded-xl transition-all"
+                style={{
+                  color: theme.gradFrom,
+                  background: showTheme ? theme.bgFrom : `${theme.gradFrom}18`,
+                  border: `1.5px solid ${theme.gradFrom}40`,
+                }}
+                title="Zmień motyw"
+              >
+                <PaletteIcon size={20} />
+              </button>
+              {showTheme && (
+                <div
+                  className="absolute right-0 top-full mt-2 z-50 flex items-center gap-2 px-3 py-2.5 rounded-2xl shadow-lg"
+                  style={{ background: 'white', border: `1px solid ${theme.bgTo}` }}
+                >
+                  <ThemePicker current={themeId} onChange={(id) => { changeTheme(id); setShowTheme(false) }} />
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
         {/* ── Pasek akcji + wyszukiwarka (tylko w zakładce Wpisy) ── */}
