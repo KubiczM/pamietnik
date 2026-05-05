@@ -136,7 +136,7 @@ export function HomePage({ onSignOut }: Props) {
   const count = allEntries?.length ?? 0
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen w-full overflow-x-hidden">
       {/* ═══ NAGŁÓWEK ═══ */}
       <header className="z-10 relative">
         <CoverPhoto

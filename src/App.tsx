@@ -93,7 +93,7 @@ export default function App() {
 
   // Ekran startowy
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden"
+    <div className="min-h-screen w-full flex flex-col relative overflow-hidden"
          style={{ background: grad }}>
       <StarDecoration />
 

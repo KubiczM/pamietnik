@@ -8,8 +8,14 @@ export function useAuth() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null)
-      setLoading(false)
+      // Jeśli jest sesja ale brak flagi w sessionStorage
+      // (czyli przeglądarka była zamknięta) — wyloguj automatycznie
+      if (data.session && !sessionStorage.getItem('diary-active')) {
+        supabase.auth.signOut().then(() => setLoading(false))
+      } else {
+        setUser(data.session?.user ?? null)
+        setLoading(false)
+      }
     })
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
@@ -20,9 +26,11 @@ export function useAuth() {
   async function signIn(email: string, password: string) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
+    sessionStorage.setItem('diary-active', '1')
   }
 
   async function signOut() {
+    sessionStorage.removeItem('diary-active')
     await supabase.auth.signOut()
   }
 
