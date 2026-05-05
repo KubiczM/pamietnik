@@ -100,11 +100,11 @@ export default function App() {
       {/* Tytuł */}
       <div className="relative flex-1 flex flex-col items-center justify-center px-6 pt-16 pb-8 text-center">
         <h1 className="text-white font-bold drop-shadow-lg mb-1"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(2.8rem, 12vw, 4.5rem)', lineHeight: 1.1 }}>
+            style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(4rem, 18vw, 7rem)', lineHeight: 1.05 }}>
           Pamiętnik
         </h1>
         <p className="text-white/80 font-semibold tracking-widest uppercase drop-shadow mb-1"
-           style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(0.9rem, 4vw, 1.15rem)' }}>
+           style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(1rem, 4.5vw, 1.3rem)' }}>
           Julii Śliwińskiej
         </p>
         <div className="w-16 h-0.5 bg-white/40 rounded-full mt-4 mb-10" />
@@ -117,10 +117,12 @@ export default function App() {
 
       {/* Sekcja gościa — przyklejona do dołu */}
       <div className="relative px-6 pb-10 text-center">
-        <p className="text-white/50 text-xs font-sans mb-3">Jesteś tu z wizytą?</p>
+        <p className="text-white/90 text-sm font-semibold font-sans mb-3 drop-shadow">
+          Jesteś tu z wizytą?
+        </p>
         <button
           onClick={() => setView('guest')}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-semibold border border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 active:bg-white/25 transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-semibold border border-white/40 text-white bg-white/15 backdrop-blur-sm hover:bg-white/25 active:bg-white/30 transition-colors shadow-sm"
         >
           💌 Zostaw wiadomość dla Julii
         </button>
