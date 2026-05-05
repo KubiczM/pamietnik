@@ -5,7 +5,7 @@ import { GuestForm } from './components/GuestForm'
 import { addEntry } from './db/entries'
 import type { DiaryEntry } from './db/database'
 import { useState } from 'react'
-import { useTheme } from './hooks/useTheme'
+import { useTheme } from './contexts/ThemeContext'
 
 function StarDecoration() {
   return (

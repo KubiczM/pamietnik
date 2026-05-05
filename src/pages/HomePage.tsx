@@ -12,7 +12,7 @@ import { groupEntriesByMonth, currentMonthKey } from '../utils/groupByMonth'
 import { ReminderBanner } from '../components/ReminderBanner'
 import { BirthdayBanner } from '../components/BirthdayBanner'
 import { ThemePicker } from '../components/ThemePicker'
-import { useTheme } from '../hooks/useTheme'
+import { useTheme } from '../contexts/ThemeContext'
 import { GalleryPage } from './GalleryPage'
 import { PhotoLightbox } from '../components/PhotoLightbox'
 
@@ -311,7 +311,12 @@ export function HomePage({ onSignOut }: Props) {
         <div className="pt-4 pb-8 text-center">
           <button
             onClick={onSignOut}
-            className="text-xs px-4 py-2 rounded-xl border border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-gray-500 font-sans transition-colors"
+            className="text-xs px-4 py-2 rounded-xl font-sans transition-all hover:opacity-80"
+            style={{
+              border: `1px solid ${theme.gradFrom}55`,
+              color: theme.gradFrom,
+              background: `${theme.gradFrom}10`,
+            }}
           >
             Wyloguj się
           </button>
