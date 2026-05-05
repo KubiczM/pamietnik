@@ -60,11 +60,6 @@ export function EntryCard({ entry, onEdit, onDelete, onTogglePin }: Props) {
             {entry.title}
           </h2>
 
-          {isGuest && (
-            <p className="mt-0.5 text-xs text-violet-400 font-sans font-medium">
-              od: {entry.guest_name}
-            </p>
-          )}
 
           <p className="mt-2 text-sm text-gray-600 line-clamp-3 leading-relaxed">
             {entry.content}
