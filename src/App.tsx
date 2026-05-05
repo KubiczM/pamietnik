@@ -99,14 +99,15 @@ export default function App() {
 
       {/* Tytuł */}
       <div className="relative flex-1 flex flex-col items-center justify-center px-6 pt-16 pb-8 text-center">
-        <p className="text-white text-sm font-semibold font-sans tracking-[0.25em] uppercase mb-3 drop-shadow">
+        <h1 className="text-white font-bold drop-shadow-lg mb-1"
+            style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(2.8rem, 12vw, 4.5rem)', lineHeight: 1.1 }}>
           Pamiętnik
-        </p>
-        <h1 className="text-white text-4xl font-bold mb-2 drop-shadow-md"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif', lineHeight: 1.2 }}>
-          Julii<br />Śliwińskiej
         </h1>
-        <div className="w-12 h-0.5 bg-white/30 rounded-full mt-4 mb-10" />
+        <p className="text-white/80 font-semibold tracking-widest uppercase drop-shadow mb-1"
+           style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(0.9rem, 4vw, 1.15rem)' }}>
+          Julii Śliwińskiej
+        </p>
+        <div className="w-16 h-0.5 bg-white/40 rounded-full mt-4 mb-10" />
 
         {/* Formularz logowania */}
         <div className="w-full max-w-xs">
