@@ -5,14 +5,13 @@ import { PenIcon } from './Icons'
 interface Props {
   photo: string | null
   position: PhotoPosition
-  count: number
   onPickPhoto: (file: File) => void
   onSavePosition: (pos: PhotoPosition) => void
   onRemovePhoto: () => void
   decoration: React.ReactNode
 }
 
-export function CoverPhoto({ photo, position, count, onPickPhoto, onSavePosition, onRemovePhoto, decoration }: Props) {
+export function CoverPhoto({ photo, position, onPickPhoto, onSavePosition, onRemovePhoto, decoration }: Props) {
   const [mode, setMode] = useState<'view' | 'reposition'>('view')
   const [tempPos, setTempPos] = useState(position)
   const [coverHeight, setCoverHeight] = useState<number | null>(null)
@@ -233,30 +232,6 @@ export function CoverPhoto({ photo, position, count, onPickPhoto, onSavePosition
         }}
       />
 
-      {/* Tytuł na dole (tylko w trybie podglądu) */}
-      {mode === 'view' && (
-        <div className="absolute bottom-0 left-0 right-0 px-4 pb-5">
-          <p className="text-white/70 text-[12px] font-sans tracking-[0.18em] uppercase mb-1"
-             style={{ textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>
-            Pamiętnik
-          </p>
-          <h1
-            className="text-white font-bold"
-            style={{
-              fontFamily: '"Playfair Display", Georgia, serif',
-              fontSize: 'clamp(1.8rem, 6vw, 2.4rem)',
-              lineHeight: 1.15,
-              textShadow: '0 2px 12px rgba(0,0,0,0.5)',
-            }}
-          >
-            Julii Śliwińskiej
-          </h1>
-          <p className="text-white/60 text-sm font-sans mt-1.5"
-             style={{ textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>
-            {count === 0 ? 'Brak wpisów' : count === 1 ? '1 wpis' : `${count} wpisów`}
-          </p>
-        </div>
-      )}
     </div>
   )
 }

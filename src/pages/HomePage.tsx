@@ -123,7 +123,6 @@ export function HomePage({ onSignOut }: Props) {
     await loadEntries()
   }
 
-const count = allEntries?.length ?? 0
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
@@ -132,7 +131,6 @@ const count = allEntries?.length ?? 0
         <CoverPhoto
           photo={photo}
           position={position}
-          count={count}
           onPickPhoto={pickPhoto}
           onSavePosition={savePosition}
           onRemovePhoto={removePhoto}
@@ -156,7 +154,9 @@ const count = allEntries?.length ?? 0
                     backgroundColor: theme.bgFrom,
                   } : undefined}
                 >
-                  {t === 'entries' ? '📖 Wpisy' : '📸 Galeria'}
+                  {t === 'entries'
+                    ? <>📖 Wpisy {allEntries && <span className="text-xs font-normal opacity-60">({allEntries.length})</span>}</>
+                    : '📸 Galeria'}
                 </button>
               ))}
             </div>
