@@ -10,6 +10,7 @@ import { PlusIcon, DownloadIcon, SearchIcon, BookOpenIcon, PinIcon } from '../co
 import { useProfilePhoto } from '../hooks/useProfilePhoto'
 import { groupEntriesByMonth, currentMonthKey } from '../utils/groupByMonth'
 import { ReminderBanner } from '../components/ReminderBanner'
+import { BirthdayBanner } from '../components/BirthdayBanner'
 import { GalleryPage } from './GalleryPage'
 import { PhotoLightbox } from '../components/PhotoLightbox'
 
@@ -223,6 +224,9 @@ export function HomePage({ onSignOut }: Props) {
       )}
 
       <main className={`max-w-2xl mx-auto px-4 py-5 space-y-4 ${tab === 'gallery' ? 'hidden' : ''}`}>
+        {/* Baner urodzinowy */}
+        <BirthdayBanner />
+
         {/* Baner przypomnienia */}
         <ReminderBanner
           lastEntryDate={allEntries && allEntries.length > 0 ? allEntries[0].date : null}
