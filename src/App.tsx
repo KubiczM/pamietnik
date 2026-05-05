@@ -5,6 +5,7 @@ import { GuestForm } from './components/GuestForm'
 import { addEntry } from './db/entries'
 import type { DiaryEntry } from './db/database'
 import { useState } from 'react'
+import { useTheme } from './hooks/useTheme'
 
 function StarDecoration() {
   return (
@@ -31,11 +32,14 @@ function StarDecoration() {
 export default function App() {
   const { user, loading, signIn, signOut } = useAuth()
   const [view, setView] = useState<'start' | 'guest' | 'guestDone'>('start')
+  const { theme } = useTheme()
+
+  const grad = `linear-gradient(135deg, ${theme.gradFrom} 0%, ${theme.gradVia} 55%, ${theme.gradTo} 100%)`
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center"
-           style={{ background: 'linear-gradient(135deg, #f472b6 0%, #c084fc 55%, #818cf8 100%)' }}>
+           style={{ background: grad }}>
         <p className="text-white/60 font-sans text-sm">Ładuję…</p>
       </div>
     )
@@ -48,7 +52,7 @@ export default function App() {
   if (view === 'guestDone') {
     return (
       <div className="min-h-screen flex items-center justify-center px-6"
-           style={{ background: 'linear-gradient(135deg, #f472b6 0%, #c084fc 55%, #818cf8 100%)' }}>
+           style={{ background: grad }}>
         <div className="text-center space-y-4">
           <p className="text-6xl">💌</p>
           <p className="text-white text-xl font-bold"
@@ -69,7 +73,7 @@ export default function App() {
   if (view === 'guest') {
     return (
       <div className="min-h-screen px-4 py-10"
-           style={{ background: 'linear-gradient(135deg, #f5f3ff 0%, #fce7f3 100%)' }}>
+           style={{ background: `linear-gradient(135deg, ${theme.bgFrom} 0%, ${theme.bgTo} 100%)` }}>
         <div className="max-w-sm mx-auto">
           <button onClick={() => setView('start')}
                   className="text-xs text-gray-400 mb-5 flex items-center gap-1 font-sans">
@@ -90,7 +94,7 @@ export default function App() {
   // Ekran startowy
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden"
-         style={{ background: 'linear-gradient(135deg, #f472b6 0%, #c084fc 55%, #818cf8 100%)' }}>
+         style={{ background: grad }}>
       <StarDecoration />
 
       {/* Tytuł */}
