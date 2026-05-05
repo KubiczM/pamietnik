@@ -43,11 +43,19 @@ export function PhotoLightbox({ src, entry, onClose }: Props) {
       </button>
 
       {/* Zdjęcie — kliknięcie zamyka */}
-      <div className="flex-1 flex items-center justify-center p-6 pt-16 pb-16">
+      <div className="flex-1 flex items-center justify-center px-4" style={{ minHeight: 0 }}>
         <img
           src={src}
           alt=""
-          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '12px' }}
+          style={{
+            maxWidth: '100%',
+            maxHeight: 'calc(100vh - 140px)',
+            width: 'auto',
+            height: 'auto',
+            objectFit: 'contain',
+            borderRadius: '12px',
+            display: 'block',
+          }}
         />
       </div>
 
