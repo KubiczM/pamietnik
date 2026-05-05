@@ -100,26 +100,32 @@ export function HomePage({ onSignOut }: Props) {
   /* ── Supabase Realtime — powiadomienia o nowych wpisach gości ── */
   useEffect(() => {
     const channel = supabase
-      .channel('entries-inserts')
+      .channel('entries-changes')
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'entries' },
         (payload) => {
           const row = payload.new as DiaryEntry
           if (row.guest_name) {
-            // Nowy wpis gościa — pokaż powiadomienie i odśwież listę
             notifIdRef.current += 1
             setNotification({
               id: notifIdRef.current,
               guestName: row.guest_name,
               title: row.title,
             })
-            loadEntries()
-          } else {
-            // Nowy wpis Julii (np. z innego urządzenia) — cicho odśwież
-            loadEntries()
           }
+          loadEntries()
         }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'entries' },
+        () => { loadEntries() }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'entries' },
+        () => { loadEntries() }
       )
       .subscribe()
 
