@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export type ThemeId = 'pink' | 'violet' | 'mint' | 'navy'
+export type ThemeId = 'pink' | 'violet' | 'strawberry' | 'blue'
 
 export interface Theme {
   id: ThemeId
@@ -42,22 +42,22 @@ export const THEMES: Theme[] = [
     accentText: 'violet-400', accentRing: 'violet-300',
   },
   {
-    id: 'mint',
-    name: 'Miętowy',
-    emoji: '🌿',
-    bgFrom: '#ecfdf5', bgVia: '#f0fdf4', bgTo: '#ccfbf1',
-    gradFrom: '#34d399', gradVia: '#10b981', gradTo: '#0d9488',
-    accent: 'emerald', accentLight: 'emerald-50', accentBorder: 'emerald-100',
-    accentText: 'emerald-400', accentRing: 'emerald-300',
+    id: 'strawberry',
+    name: 'Truskawkowy',
+    emoji: '🍓',
+    bgFrom: '#fff1f2', bgVia: '#ffe4e6', bgTo: '#fecdd3',
+    gradFrom: '#fb7185', gradVia: '#f43f5e', gradTo: '#e11d48',
+    accent: 'rose', accentLight: 'rose-50', accentBorder: 'rose-100',
+    accentText: 'rose-500', accentRing: 'rose-400',
   },
   {
-    id: 'navy',
-    name: 'Granatowy',
-    emoji: '🌙',
-    bgFrom: '#eef2ff', bgVia: '#f1f5f9', bgTo: '#e0e7ff',
-    gradFrom: '#6366f1', gradVia: '#4f46e5', gradTo: '#1e40af',
-    accent: 'indigo', accentLight: 'indigo-50', accentBorder: 'indigo-100',
-    accentText: 'indigo-400', accentRing: 'indigo-300',
+    id: 'blue',
+    name: 'Błękitny',
+    emoji: '🩵',
+    bgFrom: '#f0f9ff', bgVia: '#e0f2fe', bgTo: '#bae6fd',
+    gradFrom: '#38bdf8', gradVia: '#0ea5e9', gradTo: '#7c3aed',
+    accent: 'sky', accentLight: 'sky-50', accentBorder: 'sky-100',
+    accentText: 'sky-400', accentRing: 'sky-300',
   },
 ]
 
