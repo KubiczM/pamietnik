@@ -29,7 +29,7 @@ export function GuestForm({ onSave, onCancel }: Props) {
     e.preventDefault()
     if (!guestName.trim() || !content.trim()) return
     onSave({
-      title: `Wpis od ${guestName.trim()}`,
+      title: guestName.trim(),
       content,
       date: today,
       photos,
