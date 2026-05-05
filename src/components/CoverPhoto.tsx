@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import type { PhotoPosition } from '../hooks/useProfilePhoto'
-import { UserIcon } from './Icons'
+import { PenIcon } from './Icons'
 
 interface Props {
   photo: string | null
@@ -16,6 +16,7 @@ export function CoverPhoto({ photo, position, count, onPickPhoto, onSavePosition
   const [mode, setMode] = useState<'view' | 'reposition'>('view')
   const [tempPos, setTempPos] = useState(position)
   const [coverHeight, setCoverHeight] = useState<number | null>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const containerRef = useRef<HTMLDivElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
@@ -176,30 +177,47 @@ export function CoverPhoto({ photo, position, count, onPickPhoto, onSavePosition
 
       {/* ── Tryb: podgląd ── */}
       {mode === 'view' && (
-        <div className="absolute top-3 right-3 flex gap-2">
-          {photo && (
-            <>
-              <button
-                onClick={enterReposition}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-sm text-white text-xs font-sans font-medium active:bg-black/50 transition-colors"
-              >
-                Ustaw kadr
-              </button>
-              <button
-                onClick={() => { if (window.confirm('Usunąć zdjęcie okładki?')) onRemovePhoto() }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-sm text-white text-xs font-sans font-medium active:bg-black/50 transition-colors"
-              >
-                Usuń zdjęcie
-              </button>
-            </>
-          )}
+        <div className="absolute top-3 right-3">
+          {/* Ikona ołówka */}
           <button
-            onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-sm text-white text-xs font-sans font-medium active:bg-black/50 transition-colors"
+            onClick={() => setMenuOpen(o => !o)}
+            className="flex items-center justify-center w-10 h-10 rounded-full shadow-lg transition-all active:scale-95"
+            style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(6px)', border: '1.5px solid rgba(255,255,255,0.3)' }}
           >
-            <UserIcon size={11} />
-            {photo ? 'Zmień' : 'Dodaj zdjęcie'}
+            <PenIcon size={16} className="text-white" />
           </button>
+
+          {/* Rozwijane menu */}
+          {menuOpen && (
+            <div className="absolute right-0 top-12 flex flex-col gap-1 z-20"
+                 style={{ minWidth: '150px' }}>
+              <button
+                onClick={() => { fileInputRef.current?.click(); setMenuOpen(false) }}
+                className="w-full text-left px-4 py-2.5 rounded-xl text-white text-sm font-sans font-medium active:opacity-70 transition-opacity"
+                style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)' }}
+              >
+                📷 {photo ? 'Zmień zdjęcie' : 'Dodaj zdjęcie'}
+              </button>
+              {photo && (
+                <>
+                  <button
+                    onClick={() => { enterReposition(); setMenuOpen(false) }}
+                    className="w-full text-left px-4 py-2.5 rounded-xl text-white text-sm font-sans font-medium active:opacity-70 transition-opacity"
+                    style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)' }}
+                  >
+                    🖼 Ustaw kadr
+                  </button>
+                  <button
+                    onClick={() => { if (window.confirm('Usunąć zdjęcie okładki?')) { onRemovePhoto(); setMenuOpen(false) } }}
+                    className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-sans font-medium active:opacity-70 transition-opacity"
+                    style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)', color: '#fca5a5' }}
+                  >
+                    🗑 Usuń zdjęcie
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </div>
       )}
 
