@@ -173,33 +173,40 @@ export function HomePage({ onSignOut }: Props) {
 
         {/* ── Pasek akcji + wyszukiwarka (tylko w zakładce Wpisy) ── */}
         {tab === 'entries' && (
-        <div className="bg-white border-b border-gray-100 shadow-sm px-4 py-3">
-          <div className="max-w-2xl mx-auto flex items-center gap-2">
-            <div className="relative flex-1">
-              <SearchIcon size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Szukaj wspomnień…"
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition-all placeholder:text-gray-400"
-              />
+        <div className="bg-white border-b border-gray-100 shadow-sm px-4 pt-2.5 pb-2">
+          <div className="max-w-2xl mx-auto space-y-2">
+            {/* Wiersz 1: wyszukiwarka + przyciski */}
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1 min-w-0">
+                <SearchIcon size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" />
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Szukaj wspomnień…"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:border-transparent transition-all placeholder:text-gray-400"
+                />
+              </div>
+              <button
+                onClick={handleExport}
+                title="Eksportuj backup JSON"
+                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 text-gray-400 hover:bg-gray-100 transition-colors"
+              >
+                <DownloadIcon size={16} />
+              </button>
+              <button
+                onClick={() => setForm({ mode: 'new' })}
+                className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-sm whitespace-nowrap"
+                style={{ background: `linear-gradient(135deg, ${theme.gradFrom} 0%, ${theme.gradVia} 60%, ${theme.gradTo} 100%)` }}
+              >
+                <PlusIcon size={15} />
+                Nowy wpis
+              </button>
             </div>
-            <ThemePicker current={themeId} onChange={changeTheme} />
-            <button
-              onClick={handleExport}
-              title="Eksportuj backup JSON"
-              className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 text-gray-400 hover:bg-gray-100 transition-colors"
-            >
-              <DownloadIcon size={16} />
-            </button>
-            <button
-              onClick={() => setForm({ mode: 'new' })}
-              className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-sm whitespace-nowrap"
-              style={{ background: `linear-gradient(135deg, ${theme.gradFrom} 0%, ${theme.gradVia} 60%, ${theme.gradTo} 100%)` }}
-            >
-              <PlusIcon size={15} />
-              Nowy wpis
-            </button>
+            {/* Wiersz 2: wybór motywu */}
+            <div className="flex items-center gap-2 pb-0.5">
+              <span className="text-xs text-gray-400 font-sans">Motyw:</span>
+              <ThemePicker current={themeId} onChange={changeTheme} />
+            </div>
           </div>
         </div>
         )}
