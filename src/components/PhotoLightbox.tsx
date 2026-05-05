@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import type { DiaryEntry } from '../db/database'
 
 const MONTHS = [
@@ -17,9 +19,15 @@ interface Props {
 }
 
 export function PhotoLightbox({ src, entry, onClose }: Props) {
-  return (
+  /* Blokuj scroll strony gdy lightbox otwarty */
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex flex-col bg-black"
+      className="fixed inset-0 z-[9999] flex flex-col bg-black"
       onClick={onClose}
     >
       {/* Górny pasek */}
@@ -46,6 +54,7 @@ export function PhotoLightbox({ src, entry, onClose }: Props) {
           onClick={e => e.stopPropagation()}
         />
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
