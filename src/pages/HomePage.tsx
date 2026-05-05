@@ -10,6 +10,8 @@ import { PlusIcon, DownloadIcon, SearchIcon, BookOpenIcon, PinIcon } from '../co
 import { useProfilePhoto } from '../hooks/useProfilePhoto'
 import { groupEntriesByMonth, currentMonthKey } from '../utils/groupByMonth'
 import { ReminderBanner } from '../components/ReminderBanner'
+import { GalleryPage } from './GalleryPage'
+import { PhotoLightbox } from '../components/PhotoLightbox'
 
 // Dekoracyjna grafika SVG — abstrakcyjne kółka i linie w tle nagłówka
 function HeaderDecoration() {
@@ -64,10 +66,17 @@ interface Props {
   onSignOut: () => void
 }
 
+interface LightboxPhoto {
+  src: string
+  entry: DiaryEntry
+}
+
 export function HomePage({ onSignOut }: Props) {
   const [form, setForm] = useState<FormState>({ mode: 'hidden' })
   const [search, setSearch] = useState('')
   const [allEntries, setAllEntries] = useState<DiaryEntry[] | undefined>(undefined)
+  const [tab, setTab] = useState<'entries' | 'gallery'>('entries')
+  const [lightbox, setLightbox] = useState<LightboxPhoto | null>(null)
   const { photo, position, pickPhoto, savePosition } = useProfilePhoto()
 
   const loadEntries = useCallback(async () => {
@@ -135,7 +144,34 @@ export function HomePage({ onSignOut }: Props) {
           decoration={<HeaderDecoration />}
         />
 
-        {/* ── Pasek akcji + wyszukiwarka ── */}
+        {/* ── Zakładki Wpisy / Galeria ── */}
+        <div className="bg-white border-b border-gray-100 px-4 pt-3 pb-0">
+          <div className="max-w-2xl mx-auto flex gap-1">
+            <button
+              onClick={() => setTab('entries')}
+              className={`flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-t-xl transition-colors ${
+                tab === 'entries'
+                  ? 'text-rose-500 border-b-2 border-rose-400 bg-rose-50/50'
+                  : 'text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              📖 Wpisy
+            </button>
+            <button
+              onClick={() => setTab('gallery')}
+              className={`flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-t-xl transition-colors ${
+                tab === 'gallery'
+                  ? 'text-rose-500 border-b-2 border-rose-400 bg-rose-50/50'
+                  : 'text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              📸 Galeria
+            </button>
+          </div>
+        </div>
+
+        {/* ── Pasek akcji + wyszukiwarka (tylko w zakładce Wpisy) ── */}
+        {tab === 'entries' && (
         <div className="bg-white border-b border-gray-100 shadow-sm px-4 py-3">
           <div className="max-w-2xl mx-auto flex items-center gap-2">
             <div className="relative flex-1">
@@ -164,9 +200,29 @@ export function HomePage({ onSignOut }: Props) {
             </button>
           </div>
         </div>
+        )}
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-5 space-y-4">
+      {/* Galeria */}
+      {tab === 'gallery' && allEntries && (
+        <div className="max-w-2xl mx-auto">
+          <GalleryPage
+            entries={allEntries}
+            onPhotoClick={(photo) => setLightbox(photo)}
+          />
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {lightbox && (
+        <PhotoLightbox
+          src={lightbox.src}
+          entry={lightbox.entry}
+          onClose={() => setLightbox(null)}
+        />
+      )}
+
+      <main className={`max-w-2xl mx-auto px-4 py-5 space-y-4 ${tab === 'gallery' ? 'hidden' : ''}`}>
         {/* Baner przypomnienia */}
         <ReminderBanner
           lastEntryDate={allEntries && allEntries.length > 0 ? allEntries[0].date : null}
