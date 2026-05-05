@@ -174,14 +174,15 @@ export function HomePage({ onSignOut }: Props) {
             {/* Ikona pędzla */}
             <button
               onClick={() => setShowTheme(s => !s)}
-              className="mb-1 p-2 rounded-xl transition-colors"
-              style={showTheme ? {
+              className="mb-1 p-2 rounded-xl transition-all"
+              style={{
                 color: theme.gradFrom,
-                background: theme.bgFrom,
-              } : { color: '#9ca3af' }}
+                background: showTheme ? theme.bgFrom : `${theme.gradFrom}18`,
+                border: `1.5px solid ${theme.gradFrom}40`,
+              }}
               title="Zmień motyw"
             >
-              <PaletteIcon size={18} />
+              <PaletteIcon size={20} />
             </button>
           </div>
           {/* Rozwijany panel motywów */}
