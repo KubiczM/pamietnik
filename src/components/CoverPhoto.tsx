@@ -187,10 +187,9 @@ export function CoverPhoto({ photo, position, count, onPickPhoto, onSavePosition
               </button>
               <button
                 onClick={() => { if (window.confirm('Usunąć zdjęcie okładki?')) onRemovePhoto() }}
-                className="flex items-center justify-center w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm text-white text-sm active:bg-black/50 transition-colors"
-                title="Usuń zdjęcie"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-sm text-white text-xs font-sans font-medium active:bg-black/50 transition-colors"
               >
-                🗑
+                Usuń zdjęcie
               </button>
             </>
           )}
