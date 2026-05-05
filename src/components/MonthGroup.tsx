@@ -19,7 +19,10 @@ export function MonthGroup({ label, entries, defaultOpen, onEdit, onDelete, onTo
       {/* Nagłówek miesiąca */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between gap-3 py-2 group"
+        className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-2xl transition-colors"
+        style={{
+          background: 'linear-gradient(135deg, color-mix(in srgb, var(--grad-from) 10%, white), color-mix(in srgb, var(--grad-to) 6%, white))',
+        }}
       >
         <div className="flex items-center gap-3 min-w-0">
           {/* Etykieta miesiąca */}

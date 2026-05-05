@@ -30,29 +30,35 @@ export function PhotoLightbox({ src, entry, onClose }: Props) {
       className="fixed inset-0 z-[9999] flex flex-col bg-black"
       onClick={onClose}
     >
-      {/* Górny pasek */}
-      <div className="flex items-center justify-between px-4 py-3 bg-black/60 backdrop-blur-sm"
-           onClick={e => e.stopPropagation()}>
-        <div>
-          <p className="text-white text-sm font-semibold leading-tight">{entry.title}</p>
-          <p className="text-white/50 text-xs font-sans mt-0.5">{formatDate(entry.date)}</p>
-        </div>
-        <button
-          onClick={onClose}
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 text-white text-lg hover:bg-white/20 transition-colors"
-        >
-          ×
-        </button>
-      </div>
+      {/* Przycisk zamknięcia — zawsze widoczny w górnym rogu */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full transition-colors"
+        style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)' }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
 
-      {/* Zdjęcie */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      {/* Zdjęcie — kliknięcie zamyka */}
+      <div className="flex-1 flex items-center justify-center p-6 pt-16 pb-16">
         <img
           src={src}
           alt=""
-          className="max-w-full max-h-full object-contain rounded-xl"
-          onClick={e => e.stopPropagation()}
+          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '12px' }}
         />
+      </div>
+
+      {/* Dolny pasek z tytułem */}
+      <div
+        className="px-5 py-4 text-center"
+        style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <p className="text-white text-sm font-semibold leading-tight">{entry.title}</p>
+        <p className="text-white/50 text-xs font-sans mt-1">{formatDate(entry.date)}</p>
       </div>
     </div>,
     document.body
