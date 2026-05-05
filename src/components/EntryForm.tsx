@@ -136,7 +136,7 @@ export function EntryForm({ initial, onSave, onCancel }: Props) {
           style={{ background: theme.bgFrom, color: theme.gradFrom, border: `1px solid ${theme.gradFrom}30` }}
         >
           <CameraIcon size={12} />
-          Dodaj zdjęcia
+          Dodaj zdjęcie
         </button>
         {compressing && <p className="text-xs text-rose-400 animate-pulse">Kompresuję zdjęcia…</p>}
         {photos.length > 0 && (
