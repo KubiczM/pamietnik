@@ -28,11 +28,16 @@ export function LoveNotification() {
         if (!data) return
         setNotification(data)
 
-        const { data: signed } = await supabase.storage
-          .from('notification-images')
-          .createSignedUrl(data.image_path, 3600)
+        try {
+          const { data: signed, error } = await supabase.storage
+            .from('notification-images')
+            .createSignedUrl(data.image_path, 3600)
 
-        if (signed) setImageUrl(signed.signedUrl)
+          if (error) console.error('Signed URL error:', error)
+          if (signed) setImageUrl(signed.signedUrl)
+        } catch (err) {
+          console.error('Storage error:', err)
+        }
 
         const key = `notif_dismissed_${data.id}`
         setDismissed(sessionStorage.getItem(key) === 'true')
