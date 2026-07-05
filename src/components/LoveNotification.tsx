@@ -56,7 +56,7 @@ export function LoveNotification() {
       <div
         className="relative rounded-2xl max-w-sm w-full p-6 text-center shadow-xl"
         style={{
-          background: `linear-gradient(135deg, ${theme.bgFrom}, ${theme.bgVia}, ${theme.bgTo})`,
+          background: `linear-gradient(135deg, ${theme.gradFrom}, ${theme.gradVia}, ${theme.gradTo})`,
           boxShadow: `0 8px 32px ${theme.gradFrom}40`,
         }}
       >
