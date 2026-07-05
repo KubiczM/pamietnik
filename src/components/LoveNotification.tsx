@@ -1,82 +1,157 @@
-import { useEffect, useState } from 'react'
-import { supabase } from '../db/supabase'
-import { useTheme } from '../contexts/ThemeContext'
+import { useAuth } from './hooks/useAuth'
+import { LoginForm } from './components/LoginForm'
+import { HomePage } from './pages/HomePage'
+import { GuestForm } from './components/GuestForm'
+import { LoveNotification } from './components/LoveNotification'
+import { addEntry } from './db/entries'
+import type { DiaryEntry } from './db/database'
+import { useState } from 'react'
+import { useTheme } from './contexts/ThemeContext'
 
-interface Notification {
-  id: string
-  text: string
-  image_path: string
+function StarDecoration() {
+  return (
+    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 700"
+         preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <circle cx="350" cy="80"  r="100" fill="white" fillOpacity="0.06" />
+      <circle cx="350" cy="80"  r="70"  fill="none" stroke="white" strokeOpacity="0.08" strokeWidth="1" />
+      <circle cx="350" cy="80"  r="45"  fill="none" stroke="white" strokeOpacity="0.06" strokeWidth="1" />
+      <circle cx="40"  cy="200" r="60"  fill="white" fillOpacity="0.05" />
+      <circle cx="40"  cy="200" r="80"  fill="none" stroke="white" strokeOpacity="0.06" strokeWidth="1" />
+      <circle cx="200" cy="600" r="120" fill="white" fillOpacity="0.05" />
+      <path d="M0 300 Q100 250 200 320 T400 280" fill="none" stroke="white" strokeOpacity="0.07" strokeWidth="1"/>
+      <circle cx="80"  cy="500" r="3" fill="white" fillOpacity="0.25" />
+      <circle cx="160" cy="150" r="2" fill="white" fillOpacity="0.20" />
+      <circle cx="300" cy="350" r="2.5" fill="white" fillOpacity="0.18" />
+      <circle cx="340" cy="500" r="2" fill="white" fillOpacity="0.15" />
+      <circle cx="60"  cy="350" r="2" fill="white" fillOpacity="0.20" />
+      <polygon points="120,80 126,96 120,112 114,96"  fill="white" fillOpacity="0.10" />
+      <polygon points="320,400 325,412 320,424 315,412" fill="white" fillOpacity="0.08" />
+    </svg>
+  )
 }
 
-export function LoveNotification() {
+export default function App() {
+  const { user, loading, signIn, signOut } = useAuth()
+  const [view, setView] = useState<'start' | 'guest' | 'guestDone'>('start')
   const { theme } = useTheme()
-  const [notification, setNotification] = useState<Notification | null>(null)
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
-  const [dismissed, setDismissed] = useState(false)
 
-  useEffect(() => {
-    const today = new Date().toISOString().slice(0, 10)
+  const grad = `linear-gradient(135deg, ${theme.gradFrom} 0%, ${theme.gradVia} 55%, ${theme.gradTo} 100%)`
 
-    supabase
-      .from('notifications')
-      .select('id, text, image_path, start_date, end_date')
-      .lte('start_date', today)
-      .gte('end_date', today)
-      .limit(1)
-      .maybeSingle()
-      .then(async ({ data }) => {
-        if (!data) return
-        setNotification(data)
-
-        try {
-          const { data: signed, error } = await supabase.storage
-            .from('notification-images')
-            .createSignedUrl(data.image_path, 3600)
-
-          if (error) console.error('Signed URL error:', error)
-          if (signed) setImageUrl(signed.signedUrl)
-        } catch (err) {
-          console.error('Storage error:', err)
-        }
-
-        const key = `notif_dismissed_${data.id}`
-        setDismissed(sessionStorage.getItem(key) === 'true')
-      })
-  }, [])
-
-  if (!notification || dismissed) return null
-
-  const handleDismiss = () => {
-    sessionStorage.setItem(`notif_dismissed_${notification.id}`, 'true')
-    setDismissed(true)
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center"
+           style={{ background: grad }}>
+        <p className="text-white/60 font-sans text-sm">Ładuję…</p>
+      </div>
+    )
   }
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div
-        className="relative rounded-2xl max-w-sm w-full p-6 text-center shadow-xl"
-        style={{
-          background: `linear-gradient(135deg, ${theme.gradFrom}, ${theme.gradVia}, ${theme.gradTo})`,
-          boxShadow: `0 8px 32px ${theme.gradFrom}40`,
-        }}
-      >
-        <button
-          onClick={handleDismiss}
-          className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            alt="Rodzice"
-            className="w-full rounded-xl mb-4 object-cover"
+  // Julia zalogowana — pełny pamiętnik
+  if (user) return (
+    <>
+      <LoveNotification />
+      <HomePage onSignOut={signOut} />
+    </>
+  )
+
+  // Gość — potwierdzenie wysłania
+  if (view === 'guestDone') {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6"
+           style={{ background: grad }}>
+        <div className="text-center space-y-4">
+          <p className="text-6xl">💌</p>
+          <p className="text-white text-xl font-bold"
+             style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+            Wiadomość wysłana!
+          </p>
+          <p className="text-white/70 text-sm font-sans">Julia na pewno się ucieszy.</p>
+          <button
+            onClick={() => setView('start')}
+            className="mt-4 inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl text-sm font-semibold text-white transition-colors font-sans"
+            style={{ background: 'rgba(255,255,255,0.25)', border: '1.5px solid rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)' }}
+          >
+            ← Wróć na start
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Gość — formularz
+  if (view === 'guest') {
+    return (
+      <div className="min-h-screen px-4 py-10"
+           style={{ background: `linear-gradient(135deg, ${theme.bgFrom} 0%, ${theme.bgTo} 100%)` }}>
+        <div className="max-w-sm mx-auto">
+          <button onClick={() => setView('start')}
+                  className="text-xs text-gray-400 mb-5 flex items-center gap-1 font-sans">
+            ← Wróć
+          </button>
+          <GuestForm
+            onSave={async (data: Omit<DiaryEntry, 'id' | 'created_at' | 'updated_at'>) => {
+              await addEntry(data)
+              setView('guestDone')
+            }}
+            onCancel={() => setView('start')}
           />
-        )}
-        <p className="text-lg font-semibold text-white">{notification.text}</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Ekran startowy
+  return (
+    <div className="min-h-screen w-full flex flex-col relative overflow-hidden"
+         style={{ background: grad }}>
+      <StarDecoration />
+
+      {/* Tytuł */}
+      <div className="relative flex-1 flex flex-col items-center justify-center px-6 pt-16 pb-8 text-center">
+        <p className="text-white font-semibold tracking-[0.3em] uppercase mb-2"
+           style={{
+             fontSize: 'clamp(1.1rem, 5vw, 1.5rem)',
+             textShadow: '0 2px 8px rgba(0,0,0,0.2)',
+           }}>
+          Pamiętnik
+        </p>
+        <h1 className="text-white font-bold mb-1"
+            style={{
+              fontFamily: '"Playfair Display", Georgia, serif',
+              fontSize: 'clamp(2.8rem, 12vw, 5rem)',
+              lineHeight: 1.1,
+              textShadow: '0 4px 24px rgba(0,0,0,0.25)',
+            }}>
+          Julii<br />Śliwińskiej
+        </h1>
+        <div className="w-16 h-0.5 bg-white/40 rounded-full mt-4 mb-10" />
+
+        {/* Formularz logowania */}
+        <div className="w-full max-w-xs">
+          <LoginForm onLogin={signIn} />
+        </div>
+      </div>
+
+      {/* Sekcja gościa — przyklejona do dołu */}
+      <div className="relative px-6 pb-10 text-center">
+        <p className="text-white/80 mb-3 italic"
+           style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: '1rem', textShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
+          Widzę, że zaglądasz do pamiętnika Julii 🌸
+        </p>
+        <button
+          onClick={() => setView('guest')}
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl text-white/90 transition-colors"
+          style={{
+            fontFamily: '"Playfair Display", Georgia, serif',
+            fontSize: '0.9rem',
+            fontStyle: 'italic',
+            background: 'rgba(255,255,255,0.18)',
+            border: '1px solid rgba(255,255,255,0.35)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          💌 Zostaw wiadomość
+        </button>
       </div>
     </div>
   )
