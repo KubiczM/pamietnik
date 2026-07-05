@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../db/supabase'
+import { useTheme } from '../contexts/ThemeContext'
 
 interface Notification {
   id: string
@@ -8,6 +9,7 @@ interface Notification {
 }
 
 export function LoveNotification() {
+  const { theme } = useTheme()
   const [notification, setNotification] = useState<Notification | null>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [dismissed, setDismissed] = useState(false)
@@ -46,12 +48,21 @@ export function LoveNotification() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="relative bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-xl">
+      <div
+        className="relative rounded-2xl max-w-sm w-full p-6 text-center shadow-xl"
+        style={{
+          background: `linear-gradient(135deg, ${theme.bgFrom}, ${theme.bgVia}, ${theme.bgTo})`,
+          boxShadow: `0 8px 32px ${theme.gradFrom}40`,
+        }}
+      >
         <button
           onClick={handleDismiss}
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-2xl leading-none"
+          className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors"
         >
-          ×
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
         </button>
         {imageUrl && (
           <img
@@ -60,7 +71,7 @@ export function LoveNotification() {
             className="w-full rounded-xl mb-4 object-cover"
           />
         )}
-        <p className="text-lg font-medium">{notification.text}</p>
+        <p className="text-lg font-semibold text-white">{notification.text}</p>
       </div>
     </div>
   )
